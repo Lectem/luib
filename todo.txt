@@ -1,0 +1,35 @@
+- panels
+	* linear horizontal/vertical
+	* scrollable
+	* canvas
+	* background image
+	* background color
+- buttons
+	* background image pressed, hold, released
+	* event
+	* text
+	* check button
+	* switch/toggle
+- controls
+	* radio buttons list
+	* text field?
+- keyboard 
+
+- progress bar
+	* custom image
+- menubar
+	* entries
+	* menuitems
+- windows
+	*exit button
+	*reduce button (show only buttons + title)
+- Text panel
+- console redirection
+- images (useless because of packgrounds ?)
+- sound ?
+-internationalization
+
+general parameters
+	-widthxheight
+	-padding
+	-margin
