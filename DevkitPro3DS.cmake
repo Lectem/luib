@@ -20,12 +20,20 @@ CMAKE_FORCE_CXX_COMPILER("${DEVKITARM}/bin/arm-none-eabi-g++.exe" GNU)
 include_directories(${DEVKITARM}/include ${DEVKITPRO}/libctru/include)
 link_directories(${DEVKITARM}/lib ${DEVKITPRO}/libctru/lib)
 
+set(WITH_PORTLIBS ON CACHE BOOL "use portlibs ?")
+
+if(WITH_PORTLIBS)
+  include_directories(${DEVKITPRO}/portlibs/3ds/include)
+  link_directories(${DEVKITPRO}/portlibs/3ds/lib)
+  set(CMAKE_FIND_ROOT_PATH ${CMAKE_FIND_ROOT_PATH} ${DEVKITPRO}/portlibs)
+endif()
+
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 
-SET(BUILD_SHARED_LIBS OFF)
+SET(BUILD_SHARED_LIBS OFF CACHE INTERNAL "Shared libs not available" )
 SET(DCMAKE_EXE_LINKER_FLAGS "-static")
 
 set(ARCH "-march=armv6k -mtune=mpcore -mfloat-abi=hard ")

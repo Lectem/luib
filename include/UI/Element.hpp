@@ -1,11 +1,27 @@
 #pragma once
 
-
+#include <sf2d.h>
 #include <vector>
-#include "../Recangle.hpp"
+#include "Recangle.hpp"
 
-class Element
-{
-    Rectangle AABB;
-    Element* upper;
-};
+namespace luib {
+    class Element
+    {
+    public:
+        Element(int x =0 ,int y = 0,int w = 1,int h = 1):
+                bgColor(RGBA8(0xFF,0,0,0xFF)),
+                aabb{x,y,w,h}
+        {
+            upper=NULL;
+            screen=GFX_BOTTOM;
+        }
+        virtual void draw();
+        virtual bool isTouched();
+        u32 bgColor;
+    private:
+        Rectangle aabb;
+        Element *upper;
+        gfxScreen_t screen;
+    };
+
+}

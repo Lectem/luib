@@ -1,55 +1,55 @@
-/*
-	Hello World example made by Aurelio Mannara for ctrulib
-	This code was modified for the last time on: 12/12/2014 21:00 UTC+1
-
-	This wouldn't be possible without the amazing work done by:
-	-Smealum
-	-fincs
-	-WinterMute
-	-yellows8
-	-plutoo
-	-mtheall
-	-Many others who worked on 3DS and I'm surely forgetting about
-*/
-
 #include <3ds.h>
 #include <stdio.h>
+#include <sf2d.h>
+#include "UI/Layouts/LinearLayout.hpp"
+#include "luib.hpp"
+
 
 int main(int argc, char **argv)
 {
-	gfxInitDefault();
+    sf2d_init();
+    sf2d_set_clear_color(RGBA8(0x40, 0x40, 0x40, 0xFF));
 
-	//Initialize console on top screen. Using NULL as the second argument tells the console library to use the internal console structure as current one
-	consoleInit(GFX_TOP, NULL);
+    //Initialize console on top screen. Using NULL as the second argument tells the console library to use the internal console structure as current one
+    consoleInit(GFX_TOP, 0);
 
-	//Move the cursor to row 15 and column 19 and then prints "Hello World!"
-	//To move the cursor you have to print "\x1b[r;cH", where r and c are respectively
-	//the row and column where you want your cursor to move
-	//The top screen has 30 rows and 50 columns
-	//The bottom screen has 30 rows and 40 columns
-	printf("\x1b[15;19HHello World!");
+    printf("\x1b[15;19HHello World!");
 
-	printf("\x1b[29;15HPress Start to exit.");
+    printf("\x1b[29;15HPress Start to exit.");
+    luib::LinearLayout linearLayout(0,0,50,50);
 
-	// Main loop
-	while (aptMainLoop())
-	{
-		//Scan all the inputs. This should be done once for each frame
-		hidScanInput();
 
-		//hidKeysDown returns information about which buttons have been just pressed (and they weren't in the previous frame)
-		u32 kDown = hidKeysDown();
+    int frame=0;
+    // Main loop
+    while (aptMainLoop())
+    {
+        //Scan all the inputs. This should be done once for each frame
+        luib::updateInputs();
 
-		if (kDown & KEY_START) break; // break in order to return to hbmenu
+        //hidKeysDown returns information about which buttons have been just pressed (and they weren't in the previous frame)
 
-		// Flush and swap framebuffers
-		gfxFlushBuffers();
-		gfxSwapBuffers();
 
-		//Wait for VBlank
-		gspWaitForVBlank();
-	}
+        if (luib::kDown & KEY_START) break; // break in order to return to hbmenu
 
-	gfxExit();
-	return 0;
+        // Flush and swap framebuffers
+
+        sf2d_start_frame(GFX_BOTTOM,GFX_LEFT);
+        if(linearLayout.isTouched())
+        {
+            linearLayout.bgColor+=20;
+            printf("touched during frame %d\n",frame);
+        }
+        linearLayout.draw();
+
+        sf2d_end_frame();
+
+        sf2d_swapbuffers();
+
+        //Wait for VBlank
+        gspWaitForVBlank();
+        frame++;
+    }
+
+    sf2d_fini();
+    return 0;
 }
