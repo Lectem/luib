@@ -1,6 +1,7 @@
 #include <3ds.h>
 #include <stdio.h>
 #include <sf2d.h>
+#include <UI/Widgets/Text.hpp>
 #include "UI/Layouts/LinearLayout.hpp"
 #include "luib.hpp"
 
@@ -13,10 +14,14 @@ int main(int argc, char **argv)
     //Initialize console on top screen. Using NULL as the second argument tells the console library to use the internal console structure as current one
     consoleInit(GFX_TOP, 0);
 
+    luib::Init();
+
     printf("\x1b[15;19HHello World!");
 
     printf("\x1b[29;15HPress Start to exit.");
     luib::LinearLayout linearLayout(0,0,50,50);
+    luib::Text someText(55,20,250,250,"abcdefghijklmnopqrstuvxyz\n0123456789");
+    someText.bgColor = 0x000000FF;
 
 
     int frame=0;
@@ -40,7 +45,7 @@ int main(int argc, char **argv)
             printf("touched during frame %d\n",frame);
         }
         linearLayout.draw();
-
+        someText.draw();
         sf2d_end_frame();
 
         sf2d_swapbuffers();

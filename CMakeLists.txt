@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(LUIB CXX)
+project(LUIB C CXX)
 SET(BUILD_SHARED_LIBS OFF)
 
 include_directories( include)

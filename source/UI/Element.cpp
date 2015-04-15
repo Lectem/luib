@@ -6,7 +6,7 @@ namespace luib {
 
     void Element::draw()
     {
-        sf2d_draw_rectangle(aabb.x,aabb.y,aabb.w,aabb.h,RGBA8(0xFF, 0xFF, 0x00, 0xFF));
+        sf2d_draw_rectangle(aabb.x,aabb.y,aabb.w,aabb.h,bgColor);
     }
 
     bool Element::isTouched()

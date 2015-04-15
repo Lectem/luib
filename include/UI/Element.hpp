@@ -15,10 +15,11 @@ namespace luib {
             upper=NULL;
             screen=GFX_BOTTOM;
         }
+        virtual ~Element(){}
         virtual void draw();
         virtual bool isTouched();
         u32 bgColor;
-    private:
+    protected:
         Rectangle aabb;
         Element *upper;
         gfxScreen_t screen;
