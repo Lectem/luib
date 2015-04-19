@@ -4,9 +4,10 @@
 
 #include <luib.hpp>
 #include "UI/Widgets/Text.hpp"
+#include <UI/Draw.hpp>
 namespace luib{
 
-    void Text::draw()
+    void Text::draw() const
     {
         int cur_x= aabb.x+1;
         int cur_y= aabb.y+1;
@@ -23,7 +24,7 @@ namespace luib{
                 }
                 if (cur_y + 8 <= aabb.y + aabb.h)
                 {
-                    sf2d_draw_texture_part(font, cur_x, cur_y, 0, c * 8, 8, 8);
+                    draw::texture_part(font, cur_x, cur_y, 0, c * 8, 8, 8);
                     cur_x += 9;
                 }
             }

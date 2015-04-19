@@ -12,7 +12,7 @@ namespace luib {
     public:
         Text(int x, int y, int w, int h,std::string text);
 
-        void draw();
+        void draw() const;
 
     private:
         std::string text;

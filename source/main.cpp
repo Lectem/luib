@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <sf2d.h>
 #include <UI/Widgets/Text.hpp>
+#include <UI/Window.hpp>
 #include "UI/Layouts/LinearLayout.hpp"
 #include "luib.hpp"
 
@@ -18,10 +19,11 @@ int main(int argc, char **argv)
 
     printf("\x1b[15;19HHello World!");
 
-    printf("\x1b[29;15HPress Start to exit.");
-    luib::LinearLayout linearLayout(0,0,50,50);
-    luib::Text someText(55,20,250,250,"abcdefghijklmnopqrstuvxyz\n0123456789");
-    someText.bgColor = 0x000000FF;
+    printf("\x1b[29;15HPress Start to exit.\n");
+    luib::LinearLayout bottomScreenLayout(0,0,320,240);
+    luib::Text *someText = bottomScreenLayout.add<luib::Text>( 55,20,250,250,"abcdefghijklmnopqrstuvxyz\n0123456789");
+    someText->bgColor = 0x000000FF;
+    bottomScreenLayout.add<luib::Window>(35, 150, 80, 80);
 
 
     int frame=0;
@@ -39,13 +41,17 @@ int main(int argc, char **argv)
         // Flush and swap framebuffers
 
         sf2d_start_frame(GFX_BOTTOM,GFX_LEFT);
-        if(linearLayout.isTouched())
+        /*if(bottomScreenLayout.isTouched())
         {
-            linearLayout.bgColor+=20;
+            bottomScreenLayout.bgColor+=20;
             printf("touched during frame %d\n",frame);
+        }*/
+
+        {
+            if(bottomScreenLayout.isTouched())bottomScreenLayout.onClick();
         }
-        linearLayout.draw();
-        someText.draw();
+
+        bottomScreenLayout.draw();
         sf2d_end_frame();
 
         sf2d_swapbuffers();
