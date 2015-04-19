@@ -22,10 +22,18 @@ int main(int argc, char **argv)
 
     printf("\x1b[29;15HPress Start to exit.\n");
     luib::LinearLayout bottomScreenLayout(0,0,320,240);
-    auto someText = bottomScreenLayout.add<luib::Text>( 55,20,250,250,"abcdefghijklmnopqrstuvxyz\n0123456789");
+    luib::Text_shared_ptr someText = bottomScreenLayout.add<luib::Text>( 55,20,250,250,"abcdefghijklmnopqrstuvxyz\n0123456789");
     someText->bgColor = 0x000000FF;
-    auto w = bottomScreenLayout.add<luib::Window>(35, 150, 80, 80);
+    luib::Window_shared_ptr w = bottomScreenLayout.add<luib::Window>(35, 150, 80, 80);
 
+    luib::Button_shared_ptr button = luib::make_elem<luib::Button>(0,230,10,10);
+    button->bgColor = 0xFFFF00FF;
+    bottomScreenLayout.attach(button);
+    printf("Detaching button...\n");
+    bottomScreenLayout.detach(button);
+    printf("Button detached\n");
+    printf("Clearing button shared ptr...\n");
+    button.reset();
 
     int frame=0;
     // Main loop

@@ -18,6 +18,21 @@ namespace luib {
     }
 
 
+    void Container::attach(Element_shared_ptr element)
+    {
+        children.emplace_back(element);
+    }
+
+    void Container::detach(Element_shared_ptr element)
+    {
+        children.remove(element);
+    }
+
+    void Container::detach(Element * const element)
+    {
+        children.remove_if([element](Element_shared_ptr &it){ return it.get() == element;});
+    }
+
     void Container::draw() const
     {
         Element::draw();
@@ -40,8 +55,5 @@ namespace luib {
         }
     }
 
-    void Container::detach(Element * const element)
-    {
-        children.remove_if([element](Element_shared_ptr &it){ return it.get() == element;});
-    }
+
 }

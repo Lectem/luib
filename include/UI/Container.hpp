@@ -13,6 +13,7 @@
 namespace luib {
     class Container : public Element
     {
+    friend class Element;
         std::list<std::shared_ptr<Element>> children;
     public:
         Container(int x = 0, int y = 0, int w = 0, int h = 0);
@@ -29,11 +30,14 @@ namespace luib {
         template<class T, class ... Args>
         std::shared_ptr<T> add(Args &&... args);
 
+        void attach(Element_shared_ptr element);
+        void detach(Element_shared_ptr element);
         void detach(Element * element);
 
         virtual void draw() const;
 
         virtual void onClick() override;
+
     };
 
     template<class T, class ... Args>

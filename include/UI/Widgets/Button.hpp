@@ -11,6 +11,7 @@ namespace luib {
 
     public:
         Button(){}
+        ~Button(){printf("Button freed\n");}
         Button(int x, int y, int w, int h);
     };
     using Button_shared_ptr = std::shared_ptr<Button>;
