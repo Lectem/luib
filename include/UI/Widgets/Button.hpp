@@ -10,7 +10,10 @@ namespace luib {
     {
 
     public:
+        Button(){}
         Button(int x, int y, int w, int h);
     };
+    using Button_shared_ptr = std::shared_ptr<Button>;
+
 }
 

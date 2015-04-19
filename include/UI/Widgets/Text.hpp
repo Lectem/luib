@@ -17,5 +17,7 @@ namespace luib {
     private:
         std::string text;
     };
+    using Text_shared_ptr = std::shared_ptr<Text>;
+
 }
 

@@ -3,6 +3,7 @@
 #include <sf2d.h>
 #include <UI/Widgets/Text.hpp>
 #include <UI/Window.hpp>
+#include <UI/Widgets/Button.hpp>
 #include "UI/Layouts/LinearLayout.hpp"
 #include "luib.hpp"
 
@@ -21,9 +22,9 @@ int main(int argc, char **argv)
 
     printf("\x1b[29;15HPress Start to exit.\n");
     luib::LinearLayout bottomScreenLayout(0,0,320,240);
-    luib::Text *someText = bottomScreenLayout.add<luib::Text>( 55,20,250,250,"abcdefghijklmnopqrstuvxyz\n0123456789");
+    auto someText = bottomScreenLayout.add<luib::Text>( 55,20,250,250,"abcdefghijklmnopqrstuvxyz\n0123456789");
     someText->bgColor = 0x000000FF;
-    bottomScreenLayout.add<luib::Window>(35, 150, 80, 80);
+    auto w = bottomScreenLayout.add<luib::Window>(35, 150, 80, 80);
 
 
     int frame=0;

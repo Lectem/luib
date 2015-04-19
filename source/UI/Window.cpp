@@ -23,6 +23,7 @@ namespace luib {
         if (closeButtonAABB().contains(touch.px,touch.py))
         {
             bgColor^=0xFF000000;
+            upper->detach(this);
         }
         else
         {

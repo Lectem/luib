@@ -2,8 +2,13 @@
 #include <UI/Draw.hpp>
 #include "UI/Element.hpp"
 #include "luib.hpp"
-
+#include "UI/Container.hpp"
 namespace luib {
+
+
+    Element::~Element()
+    {
+    }
 
     void Element::draw() const
     {
@@ -19,4 +24,5 @@ namespace luib {
     {
         bgColor^=0xFFFFFF00;
     }
+
 }

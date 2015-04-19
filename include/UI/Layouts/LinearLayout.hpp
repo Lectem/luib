@@ -13,5 +13,6 @@ namespace luib {
         LinearLayout(int x, int y, int w, int h);
     };
 
+    using LinearLayout_shared_ptr = std::shared_ptr<LinearLayout>;
 
 }

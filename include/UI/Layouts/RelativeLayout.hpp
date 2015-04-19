@@ -13,4 +13,6 @@ namespace luib {
         RelativeLayout(int x, int y, int w, int h);
     };
 
+    using RelativeLayout_shared_ptr = std::shared_ptr<RelativeLayout>;
+
 }

@@ -13,9 +13,15 @@ namespace luib {
 
     public:
         Window(int x, int y, int w, int h);
+
+        virtual ~Window()
+        {
+            printf("Window has been closed and freed\n");
+        }
+
         virtual void draw() const override;
         virtual void onClick() override;
     };
 
-
+    using Window_shared_ptr = std::shared_ptr<Window>;
 }

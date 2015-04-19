@@ -14,17 +14,14 @@ namespace luib {
 
     Container::~Container()
     {
-        for (size_t i=0; children.size();++i)
-        {
-            delete children[i];
-        }
+
     }
 
 
     void Container::draw() const
     {
         Element::draw();
-        for(Element * e : children)
+        for(auto e : children)
         {
             e->draw();
         }
@@ -34,12 +31,17 @@ namespace luib {
     void Container::onClick()
     {
         Element::onClick();
-        for(Element * e : children)
+        for(auto e : children)
         {
             if(e->isTouched())
             {
                 e->onClick();
             }
         }
+    }
+
+    void Container::detach(Element * const element)
+    {
+        children.remove_if([element](Element_shared_ptr &it){ return it.get() == element;});
     }
 }
