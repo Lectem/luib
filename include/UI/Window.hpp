@@ -10,9 +10,10 @@ namespace luib {
     {
         int topBarHeight = 8;
         Rectangle closeButtonAABB();
+        Rectangle titleBarAABB();
 
     public:
-        Window(int x, int y, int w, int h);
+        Window(int x, int y, int w, int h, u32 bgColor = RGBA8(0xFF,0xFF,0xFF,0xFF));
 
         virtual ~Window()
         {
@@ -20,6 +21,8 @@ namespace luib {
         }
 
         virtual void draw() const override;
+
+    protected:
         virtual void onClick() override;
     };
 

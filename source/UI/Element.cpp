@@ -25,4 +25,10 @@ namespace luib {
         bgColor^=0xFFFFFF00;
     }
 
+    /**
+     * Should update the size and/or values of the element
+     */
+    void Element::update()
+    {
+    }
 }

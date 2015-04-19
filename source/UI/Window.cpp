@@ -13,13 +13,16 @@ namespace luib {
         draw::rectangle(aabb.x + aabb.w - topBarHeight, aabb.y, topBarHeight, topBarHeight, 0x00FF00FF);
     }
 
-    Window::Window(int x, int y, int w, int h) : Container(x, y, w, h)
+    Window::Window(int x, int y, int w, int h,u32 bgColor) : Container(x, y, w, h,bgColor)
     {
 
     }
 
     void Window::onClick()
     {
+        if(titleBarAABB().contains(touch.px,touch.py))
+        {
+        }
         if (closeButtonAABB().contains(touch.px,touch.py))
         {
             bgColor^=0xFF000000;
@@ -31,8 +34,14 @@ namespace luib {
         }
     }
 
+    Rectangle Window::titleBarAABB()
+    {
+        return Rectangle(aabb.x , aabb.y,aabb.w - topBarHeight, topBarHeight);
+    }
+
     Rectangle Window::closeButtonAABB()
     {
         return Rectangle(aabb.x + aabb.w - topBarHeight, aabb.y, topBarHeight, topBarHeight);
     }
+
 }

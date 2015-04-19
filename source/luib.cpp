@@ -2,6 +2,7 @@
 // Created by Lectem on 14/04/2015.
 //
 #include <3ds.h>
+#include <UI/Layouts/RelativeLayout.hpp>
 #include "luib.hpp"
 
 
@@ -24,6 +25,8 @@ namespace luib{
     u32 kUp =0;
     u32 kHeld =0;
     sf2d_texture * font;
+    RelativeLayout topScreenLayout(0,0,400,240);
+    RelativeLayout bottomScreenLayout(0,0,320,240);
 
     void Init()
     {
@@ -39,5 +42,15 @@ namespace luib{
         kDown=keysDown();
         kUp=keysUp();
         kHeld=keysHeld();
+    }
+
+    void update()
+    {
+        updateInputs();
+        bottomScreenLayout.update();
+        if(bottomScreenLayout.isTouched())bottomScreenLayout.onClick();
+        bottomScreenLayout.draw();
+        //TODO
+        //topScreenLayout.draw();
     }
 }

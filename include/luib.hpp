@@ -5,10 +5,14 @@
 
 #include <3ds.h>
 #include <sf2d.h>
-
+#include "UI/Layouts/RelativeLayout.hpp"
 namespace luib {
     void Init();
     void updateInputs();
+    void update();
+
+    extern RelativeLayout topScreenLayout;
+    extern RelativeLayout bottomScreenLayout;
     extern touchPosition touch;
     extern u32 kDown;
     extern u32 kUp;

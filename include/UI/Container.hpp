@@ -13,10 +13,11 @@
 namespace luib {
     class Container : public Element
     {
-    friend class Element;
+        friend class Element;
+        friend void update();
         std::list<std::shared_ptr<Element>> children;
     public:
-        Container(int x = 0, int y = 0, int w = 0, int h = 0);
+        Container(int x = 0, int y = 0, int w = 0, int h = 0,u32 bgColor = RGBA8(0,0,0,0));
 
         ~Container();
 
@@ -30,14 +31,22 @@ namespace luib {
         template<class T, class ... Args>
         std::shared_ptr<T> add(Args &&... args);
 
+        /**
+         * @brief Attaches an element to the container
+         * @param element a shared pointer to the element.
+         * @warning Since we are using shared pointers, keep in mind that if you don't keep a shared_ptr to the element, it might be destroyed by the UI.
+         * Please remember it must NOT be allocated on the stack or it will be destroyed twice.
+         */
         void attach(Element_shared_ptr element);
         void detach(Element_shared_ptr element);
         void detach(Element * element);
 
+        virtual void update();
         virtual void draw() const;
 
+    protected:
         virtual void onClick() override;
-
+        void clean();
     };
 
     template<class T, class ... Args>

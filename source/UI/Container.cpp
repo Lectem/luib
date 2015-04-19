@@ -3,10 +3,10 @@
 //
 
 #include "UI/Container.hpp"
-
+#include <algorithm>
 namespace luib {
 
-    Container::Container(int x, int y, int w, int h) : Element(x, y, w, h)
+    Container::Container(int x, int y, int w, int h,u32 bgColor) : Element(x, y, w, h,bgColor)
     {
 
     }
@@ -25,35 +25,59 @@ namespace luib {
 
     void Container::detach(Element_shared_ptr element)
     {
-        children.remove(element);
+        for(auto &e:children)
+        {
+            if(e == element)
+            {
+                e.reset();
+            }
+        }
     }
 
     void Container::detach(Element * const element)
     {
-        children.remove_if([element](Element_shared_ptr &it){ return it.get() == element;});
+        for(auto &e:children)
+        {
+            if(e.get() == element)
+            {
+                e.reset();
+            }
+        }
     }
 
     void Container::draw() const
     {
         Element::draw();
-        for(auto e : children)
+        for(auto &e : children)
         {
-            e->draw();
+            if(e.use_count())e->draw();
         }
     }
 
 
     void Container::onClick()
     {
-        Element::onClick();
-        for(auto e : children)
+        for(auto it = children.begin();it != children.end() ; ++it)
         {
-            if(e->isTouched())
+            if(it->use_count() == 0)
             {
-                e->onClick();
+                it = children.erase(it);
             }
+            else if((*it)->isTouched()) (*it)->onClick();
         }
+        Element::onClick();
     }
 
 
+    void Container::update()
+    {
+        for(auto it = children.begin();it != children.end() ; ++it)
+        {
+            if(it->use_count() == 0)
+            {
+                it = children.erase(it);
+            }
+            else (*it)->update();
+        }
+    }
 }
