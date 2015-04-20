@@ -25,14 +25,23 @@ namespace luib{
     u32 kUp =0;
     u32 kHeld =0;
     sf2d_texture * font;
-    RelativeLayout topScreenLayout(0,0,400,240);
-    RelativeLayout bottomScreenLayout(0,0,320,240);
+    RelativeLayout* topScreenLayout = nullptr;
+    RelativeLayout* bottomScreenLayout = nullptr;
+    Element test(0,0);
 
     void Init()
     {
+        topScreenLayout= new RelativeLayout(0,0,400,240);
+        bottomScreenLayout=new RelativeLayout(0,0,320,240);
         font = sf2d_create_texture(8,1024,GPU_RGBA8,SF2D_PLACE_VRAM);
         sf2d_fill_texture_from_RGBA8(font, fontData.pixel_data, fontData.width, fontData.height);
         sf2d_texture_tile32(font);
+    }
+
+    void Exit()
+    {
+        delete topScreenLayout; topScreenLayout = nullptr;
+        delete bottomScreenLayout; bottomScreenLayout = nullptr;
     }
 
     void updateInputs()
@@ -47,9 +56,12 @@ namespace luib{
     void update()
     {
         updateInputs();
-        bottomScreenLayout.update();
-        if(bottomScreenLayout.isTouched())bottomScreenLayout.onClick();
-        bottomScreenLayout.draw();
+        if(bottomScreenLayout)
+        {
+            bottomScreenLayout->update();
+            if (bottomScreenLayout->isTouched())bottomScreenLayout->onClick();
+            bottomScreenLayout->draw();
+        }
         //TODO
         //topScreenLayout.draw();
     }

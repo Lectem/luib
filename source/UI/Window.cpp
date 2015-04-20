@@ -20,10 +20,23 @@ namespace luib {
 
     void Window::onClick()
     {
-        if(titleBarAABB().contains(touch.px,touch.py))
+        bool wasHold = isHold;
+        isHold = titleBarAABB().contains(touch.px,touch.py);
+        printf("Window::OnClick\n");
+        if(isHold)
         {
+            printf("oldpos (%d %d)\n",aabb.x,aabb.y);
+
+            if(wasHold)
+            {
+                printf("delta (%d,%d)\n",touch.px - lastTouchPos.px,touch.py - lastTouchPos.py);
+                aabb.x+=touch.px - lastTouchPos.px;
+                aabb.y+=touch.py - lastTouchPos.py;
+                printf("newpos (%d %d)\n",aabb.x,aabb.y);
+            }
+            lastTouchPos = touch;
         }
-        if (closeButtonAABB().contains(touch.px,touch.py))
+        else if (closeButtonAABB().contains(touch.px,touch.py))
         {
             bgColor^=0xFF000000;
             upper->detach(this);

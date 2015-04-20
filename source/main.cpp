@@ -19,24 +19,33 @@ int main(int argc, char **argv)
 
     luib::Init();
 
-    printf("\x1b[15;19HHello World!");
+    printf("Hello World!");
+    printf("Press Start to exit.\n");
 
-    printf("\x1b[29;15HPress Start to exit.\n");
+    if(luib::bottomScreenLayout)
+    {
+        luib::Text_shared_ptr someText = luib::bottomScreenLayout->add<luib::Text>(55, 20, 250, 250,
+                                                                                   "abcdefghijklmnopqrstuvxyz\n0123456789");
+        someText->bgColor = 0x000000FF;
 
-    luib::Text_shared_ptr someText = luib::bottomScreenLayout.add<luib::Text>( 55,20,250,250,"abcdefghijklmnopqrstuvxyz\n0123456789");
-    someText->bgColor = 0x000000FF;
-
-    luib::Button_shared_ptr button = luib::make_elem<luib::Button>(0,230,10,10);
-    button->bgColor = 0xFFFF00FF;
-    luib::bottomScreenLayout.attach(button);
-    printf("Detaching button...\n");
-    luib::bottomScreenLayout.detach(button);
-    printf("Button detached\n");
-    printf("Reattaching button\n");
-    luib::bottomScreenLayout.attach(button);
+        luib::Button_shared_ptr button = luib::make_elem<luib::Button>(0, 230, 10, 10);
+        button->bgColor = 0xFFFF00FF;
+        luib::bottomScreenLayout->attach(button);
+        printf("Detaching button...\n");
+        luib::bottomScreenLayout->detach(button);
+        printf("Button detached\n");
+        printf("Reattaching button\n");
+    luib::bottomScreenLayout->attach(button);
     printf("Clearing button shared ptr...\n");
     button.reset();
-    luib::Window_shared_ptr w = luib::bottomScreenLayout.add<luib::Window>(35, 150, 80, 80);
+    luib::Window_shared_ptr w = luib::bottomScreenLayout->add<luib::Window>(35, 150, 80, 80);
+
+
+    }
+    else
+    {
+        printf("bottomLayout not allocated\n");
+    }
     int frame=0;
     // Main loop
     while (aptMainLoop())
@@ -51,7 +60,6 @@ int main(int argc, char **argv)
         sf2d_start_frame(GFX_BOTTOM,GFX_LEFT);
 
         luib::update();
-        printf("win ptr ref count %ld\n",w.use_count());
 
         sf2d_end_frame();
 
@@ -63,5 +71,6 @@ int main(int argc, char **argv)
     }
 
     sf2d_fini();
+    luib::Exit();
     return 0;
 }

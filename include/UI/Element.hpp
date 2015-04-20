@@ -15,12 +15,13 @@ namespace luib {
     {
         friend class Container;
     public:
-        Element(int x =0 ,int y = 0,int w = 1,int h = 1,u32 bgColor = RGBA8(0,0,0,0)):
+        Element(){}
+        Element(int x ,int y,int w = 1,int h = 1,u32 bgColor = RGBA8(0,0,0,0)):
                 bgColor(bgColor),
                 aabb{x,y,w,h}
         {
             screen=GFX_BOTTOM;
-            printf("Element created\n");
+            //printf("Element created\n");
         }
         virtual ~Element();
         virtual void update();

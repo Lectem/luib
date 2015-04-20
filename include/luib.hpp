@@ -8,11 +8,12 @@
 #include "UI/Layouts/RelativeLayout.hpp"
 namespace luib {
     void Init();
+    void Exit();
     void updateInputs();
     void update();
 
-    extern RelativeLayout topScreenLayout;
-    extern RelativeLayout bottomScreenLayout;
+    extern RelativeLayout* topScreenLayout;
+    extern RelativeLayout* bottomScreenLayout;
     extern touchPosition touch;
     extern u32 kDown;
     extern u32 kUp;

@@ -1,7 +1,8 @@
 #project specifics
 build
 cbuild
-
+html
+netload.bat
 
 # Created by .ignore support plugin (hsz.mobi)
 ### C template

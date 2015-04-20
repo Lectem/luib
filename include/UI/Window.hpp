@@ -11,6 +11,8 @@ namespace luib {
         int topBarHeight = 8;
         Rectangle closeButtonAABB();
         Rectangle titleBarAABB();
+        bool isHold = false;
+        touchPosition lastTouchPos;
 
     public:
         Window(int x, int y, int w, int h, u32 bgColor = RGBA8(0xFF,0xFF,0xFF,0xFF));
