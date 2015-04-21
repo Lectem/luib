@@ -14,6 +14,9 @@ namespace luib {
     class Element
     {
         friend class Container;
+        friend void ::luib::Update();
+        friend void ::luib::ResetFocus();
+        friend void ::luib::findFocus();
     public:
         Element(){}
         Element(int x ,int y,int w = 1,int h = 1,u32 bgColor = RGBA8(0,0,0,0)):
@@ -30,9 +33,15 @@ namespace luib {
         u32 bgColor;
     protected:
         virtual void onClick();
+        virtual void onFocus();
+        virtual void onFocusLoss();
+        virtual void getFocusedElement(Element* &currentFocus);
+
         Rectangle aabb;
         Container *upper = nullptr;
         Container *root = nullptr;
+        int depthLevel = 0;
+        bool hasFocus = false;
         gfxScreen_t screen;
     };
 

@@ -57,4 +57,13 @@ namespace luib {
         return Rectangle(aabb.x + aabb.w - topBarHeight, aabb.y, topBarHeight, topBarHeight);
     }
 
+    void Window::onFocus()
+    {
+        printf("Window focused\n");
+    }
+
+    void Window::onFocusLoss()
+    {
+        printf("Window focus lost\n");
+    }
 }

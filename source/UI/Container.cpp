@@ -4,6 +4,9 @@
 
 #include "UI/Container.hpp"
 #include <algorithm>
+#include <luib.hpp>
+#include <3ds/services/hid.h>
+
 namespace luib {
 
     Container::Container(int x, int y, int w, int h,u32 bgColor) : Element(x, y, w, h,bgColor)
@@ -20,6 +23,10 @@ namespace luib {
 
     void Container::attach(Element_shared_ptr element)
     {
+        element->upper = this;
+        if (root != nullptr)element->root = root;
+        else element->root = this;
+        element->depthLevel = depthLevel+1;
         children.emplace_back(element);
     }
 
@@ -57,6 +64,7 @@ namespace luib {
 
     void Container::onClick()
     {
+/*
         for(auto it = children.begin();it != children.end() ; ++it)
         {
             if(it->use_count() == 0)
@@ -64,7 +72,7 @@ namespace luib {
                 it = children.erase(it);
             }
             else if((*it)->isTouched()) (*it)->onClick();
-        }
+        }*/
         Element::onClick();
     }
 
@@ -78,6 +86,18 @@ namespace luib {
                 it = children.erase(it);
             }
             else (*it)->update();
+        }
+    }
+
+    void Container::getFocusedElement(Element* & currentFocus)
+    {
+        Element::getFocusedElement(currentFocus);
+        for(auto it = children.rbegin();it!=children.rend();++it)
+        {
+            if((*it)->aabb.contains(touch.px,touch.py))
+            {
+                (*it)->getFocusedElement(currentFocus);
+            }
         }
     }
 }

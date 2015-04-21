@@ -9,8 +9,9 @@
 namespace luib {
     void Init();
     void Exit();
-    void updateInputs();
-    void update();
+    void Update();
+    void UpdateInputs();
+    void ResetFocus();
 
     extern RelativeLayout* topScreenLayout;
     extern RelativeLayout* bottomScreenLayout;

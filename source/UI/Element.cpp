@@ -8,6 +8,10 @@ namespace luib {
 
     Element::~Element()
     {
+        if(hasFocus)
+        {
+            ResetFocus();
+        }
     }
 
     void Element::draw() const
@@ -30,5 +34,25 @@ namespace luib {
      */
     void Element::update()
     {
+    }
+
+
+    void Element::getFocusedElement(Element *&currentFocus)
+    {
+        if(currentFocus->depthLevel < depthLevel)
+        {
+            hasFocus = true;
+            currentFocus = this;
+        }
+    }
+
+    void Element::onFocus()
+    {
+
+    }
+
+    void Element::onFocusLoss()
+    {
+
     }
 }

@@ -59,7 +59,7 @@ int main(int argc, char **argv)
 
         sf2d_start_frame(GFX_BOTTOM,GFX_LEFT);
 
-        luib::update();
+        luib::Update();
 
         sf2d_end_frame();
 

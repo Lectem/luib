@@ -24,10 +24,12 @@ namespace luib{
     u32 kDown =0;
     u32 kUp =0;
     u32 kHeld =0;
-    sf2d_texture * font;
+    sf2d_texture * font = nullptr;
     RelativeLayout* topScreenLayout = nullptr;
     RelativeLayout* bottomScreenLayout = nullptr;
-    Element test(0,0);
+    Element* elementWithFocus;
+
+    void findFocus();
 
     void Init()
     {
@@ -44,7 +46,7 @@ namespace luib{
         delete bottomScreenLayout; bottomScreenLayout = nullptr;
     }
 
-    void updateInputs()
+    void UpdateInputs()
     {
         hidScanInput();
         hidTouchRead(&touch);
@@ -53,16 +55,46 @@ namespace luib{
         kHeld=keysHeld();
     }
 
-    void update()
+    void Update()
     {
-        updateInputs();
+        UpdateInputs();
         if(bottomScreenLayout)
         {
             bottomScreenLayout->update();
-            if (bottomScreenLayout->isTouched())bottomScreenLayout->onClick();
+            if (kDown&KEY_TOUCH || kHeld&KEY_TOUCH)
+            {
+                findFocus();
+                if(elementWithFocus != nullptr)
+                {
+                    elementWithFocus->onFocus();
+                    if(kDown&&KEY_TOUCH)
+                    {
+                        elementWithFocus->onClick();
+                    }
+                }
+            }
+            if(kUp&KEY_TOUCH)
+            {
+                ResetFocus();
+            }
             bottomScreenLayout->draw();
         }
         //TODO
         //topScreenLayout.draw();
+    }
+
+    void ResetFocus()
+    {
+        if(elementWithFocus != nullptr)
+        {
+            elementWithFocus->hasFocus = false;
+            elementWithFocus->onFocusLoss();
+        }
+        elementWithFocus = bottomScreenLayout;
+    }
+
+    void findFocus()
+    {
+        bottomScreenLayout->getFocusedElement(elementWithFocus);
     }
 }

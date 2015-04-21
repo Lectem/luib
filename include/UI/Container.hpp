@@ -14,8 +14,8 @@ namespace luib {
     class Container : public Element
     {
         friend class Element;
-        friend void update();
-        std::list<std::shared_ptr<Element>> children;
+        friend void ::luib::Update();
+        friend void ::luib::findFocus();
     public:
         Container(int x = 0, int y = 0, int w = 0, int h = 0,u32 bgColor = RGBA8(0,0,0,0));
 
@@ -46,18 +46,17 @@ namespace luib {
 
     protected:
         virtual void onClick() override;
+        virtual void getFocusedElement(Element* &currentFocus) override;
         void clean();
+
+        std::list<std::shared_ptr<Element>> children;
     };
 
     template<class T, class ... Args>
     std::shared_ptr<T> Container::add(Args &&... args)
     {
         std::shared_ptr<T> element = std::make_shared<T>(std::forward<Args>(args)...);
-        element->upper = this;
-        if (root != nullptr)element->root = root;
-        else element->root = this;
-
-        children.emplace_back(element);
+        attach(element);
         return element;
     }
 

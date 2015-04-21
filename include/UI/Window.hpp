@@ -26,6 +26,9 @@ namespace luib {
 
     protected:
         virtual void onClick() override;
+        virtual void onFocus() override;
+
+        virtual void onFocusLoss() override;
     };
 
     using Window_shared_ptr = std::shared_ptr<Window>;
