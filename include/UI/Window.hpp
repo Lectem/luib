@@ -11,7 +11,7 @@ namespace luib {
         int topBarHeight = 8;
         Rectangle closeButtonAABB();
         Rectangle titleBarAABB();
-        bool isHold = false;
+        bool isGrabbed = false;
         touchPosition lastTouchPos;
 
     public:
@@ -26,8 +26,10 @@ namespace luib {
 
     protected:
         virtual void onClick() override;
-        virtual void onFocus() override;
 
+        virtual void onHold() override;
+
+        virtual void onFocus() override;
         virtual void onFocusLoss() override;
     };
 

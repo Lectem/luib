@@ -24,7 +24,6 @@ namespace luib {
                 aabb{x,y,w,h}
         {
             screen=GFX_BOTTOM;
-            //printf("Element created\n");
         }
         virtual ~Element();
         virtual void update();
@@ -33,6 +32,7 @@ namespace luib {
         u32 bgColor;
     protected:
         virtual void onClick();
+        virtual void onHold();
         virtual void onFocus();
         virtual void onFocusLoss();
         virtual void getFocusedElement(Element* &currentFocus);

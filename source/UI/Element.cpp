@@ -55,4 +55,9 @@ namespace luib {
     {
 
     }
+
+    void Element::onHold()
+    {
+
+    }
 }

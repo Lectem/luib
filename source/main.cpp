@@ -22,7 +22,7 @@ int main(int argc, char **argv)
     printf("Hello World!");
     printf("Press Start to exit.\n");
 
-    if(luib::bottomScreenLayout)
+    if (luib::bottomScreenLayout)
     {
         luib::Text_shared_ptr someText = luib::bottomScreenLayout->add<luib::Text>(55, 20, 250, 250,
                                                                                    "abcdefghijklmnopqrstuvxyz\n0123456789");
@@ -35,18 +35,17 @@ int main(int argc, char **argv)
         luib::bottomScreenLayout->detach(button);
         printf("Button detached\n");
         printf("Reattaching button\n");
-    luib::bottomScreenLayout->attach(button);
-    printf("Clearing button shared ptr...\n");
-    button.reset();
-    luib::Window_shared_ptr w = luib::bottomScreenLayout->add<luib::Window>(35, 150, 80, 80);
-
-
+        luib::bottomScreenLayout->attach(button);
+        printf("Clearing button shared ptr...\n");
+        button.reset();
+        luib::Window_shared_ptr w = luib::bottomScreenLayout->add<luib::Window>(35, 150, 80, 80);
     }
     else
     {
         printf("bottomLayout not allocated\n");
     }
-    int frame=0;
+
+    int frame = 0;
     // Main loop
     while (aptMainLoop())
     {
@@ -57,8 +56,9 @@ int main(int argc, char **argv)
 
         // Flush and swap framebuffers
 
-        sf2d_start_frame(GFX_BOTTOM,GFX_LEFT);
+        sf2d_start_frame(GFX_BOTTOM, GFX_LEFT);
 
+        //luib::UpdateInputs();
         luib::Update();
 
         sf2d_end_frame();
@@ -71,6 +71,6 @@ int main(int argc, char **argv)
     }
 
     sf2d_fini();
-    luib::Exit();
+    //luib::Exit();
     return 0;
 }

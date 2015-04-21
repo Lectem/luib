@@ -6,18 +6,7 @@
 #include "luib.hpp"
 
 
-extern "C"
-{
-
-extern const struct
-{
-    unsigned int width;
-    unsigned int height;
-    unsigned int bytes_per_pixel;
-    /* 2:RGB16, 3:RGB, 4:RGBA */
-    unsigned char pixel_data[8 * 1024 * 4 + 1];
-} fontData;
-}
+#include "fontData.hcc"
 
 namespace luib{
     touchPosition touch;
@@ -27,7 +16,7 @@ namespace luib{
     sf2d_texture * font = nullptr;
     RelativeLayout* topScreenLayout = nullptr;
     RelativeLayout* bottomScreenLayout = nullptr;
-    Element* elementWithFocus;
+    Element* elementWithFocus = nullptr;
 
     void findFocus();
 
@@ -35,7 +24,8 @@ namespace luib{
     {
         topScreenLayout= new RelativeLayout(0,0,400,240);
         bottomScreenLayout=new RelativeLayout(0,0,320,240);
-        font = sf2d_create_texture(8,1024,GPU_RGBA8,SF2D_PLACE_VRAM);
+        elementWithFocus = bottomScreenLayout;
+        font = sf2d_create_texture(8,1024,GPU_RGBA8,SF2D_PLACE_RAM);
         sf2d_fill_texture_from_RGBA8(font, fontData.pixel_data, fontData.width, fontData.height);
         sf2d_texture_tile32(font);
     }
@@ -67,9 +57,13 @@ namespace luib{
                 if(elementWithFocus != nullptr)
                 {
                     elementWithFocus->onFocus();
-                    if(kDown&&KEY_TOUCH)
+                    if(kDown&KEY_TOUCH)
                     {
                         elementWithFocus->onClick();
+                    }
+                    if(kHeld&KEY_TOUCH)
+                    {
+                        elementWithFocus->onHold();
                     }
                 }
             }
