@@ -17,7 +17,7 @@ namespace luib{
             if(c >=32 && c<128)
             {
                 c-=32;
-                if (cur_x + 8 >= aabb.x + aabb.w )
+                if (cur_x + 8 >= aabb.x + aabb.w )//TODO : 8 * longueur mot
                 {
                     cur_x = aabb.x + 1;
                     cur_y += 9;
@@ -41,5 +41,11 @@ namespace luib{
             text(text)
     {
 
+    }
+
+    void Text::onClick()
+    {
+        Element::onClick();
+        printf("Text clicked\n");
     }
 }

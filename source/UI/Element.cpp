@@ -60,4 +60,16 @@ namespace luib {
     {
 
     }
+
+    void Element::move(int x, int y)
+    {
+        aabb.x+=x;
+        aabb.y+=y;
+    }
+
+    void Element::moveTo(int x, int y)
+    {
+        aabb.x=x;
+        aabb.y=y;
+    }
 }

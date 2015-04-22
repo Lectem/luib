@@ -51,20 +51,30 @@ namespace luib{
         if(bottomScreenLayout)
         {
             bottomScreenLayout->update();
-            if (kDown&KEY_TOUCH || kHeld&KEY_TOUCH)
+            if(kDown&KEY_TOUCH)
             {
+                //Update focus only on new click
                 findFocus();
                 if(elementWithFocus != nullptr)
                 {
+                    elementWithFocus->onClick();
+                }
+                //Check again, in case the element has lost focus or was destroyed...
+                if(elementWithFocus != nullptr)
+                {
                     elementWithFocus->onFocus();
-                    if(kDown&KEY_TOUCH)
-                    {
-                        elementWithFocus->onClick();
-                    }
-                    if(kHeld&KEY_TOUCH)
-                    {
-                        elementWithFocus->onHold();
-                    }
+                }
+            }
+            if (kHeld&KEY_TOUCH)
+            {
+                if(elementWithFocus != nullptr)
+                {
+                    elementWithFocus->onHold();
+                }
+                //Check again, in case the element has lost focus or was destroyed...
+                if(elementWithFocus != nullptr)
+                {
+                    elementWithFocus->onFocus();
                 }
             }
             if(kUp&KEY_TOUCH)

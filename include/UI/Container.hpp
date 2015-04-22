@@ -44,6 +44,11 @@ namespace luib {
         virtual void update();
         virtual void draw() const;
 
+
+        virtual void move(int x, int y) override;
+
+        virtual void moveTo(int x, int y) override;
+
     protected:
         virtual void onClick() override;
         virtual void getFocusedElement(Element* &currentFocus) override;
@@ -55,8 +60,21 @@ namespace luib {
     template<class T, class ... Args>
     std::shared_ptr<T> Container::add(Args &&... args)
     {
+        Derived_from<T,Element>();
         std::shared_ptr<T> element = std::make_shared<T>(std::forward<Args>(args)...);
         attach(element);
+        if(element->aabb.x+element->aabb.w >= aabb.w)
+        {
+            element->aabb.w = aabb.w -element->aabb.x ;
+        }
+        if(element->aabb.y+element->aabb.h >= aabb.h)
+        {
+            element->aabb.h = aabb.h -element->aabb.y ;
+            printf("element->aabb.y %d\n",element->aabb.y);
+        }
+        element->aabb.x+=aabb.x;
+        element->aabb.y+=aabb.y;
+
         return element;
     }
 

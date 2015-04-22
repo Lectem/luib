@@ -22,7 +22,8 @@ namespace luib {
     {
         if(titleBarAABB().contains(touch.px,touch.py))
         {
-            lastTouchPos = touch;
+            touchOffset.px = touch.px-aabb.x;
+            touchOffset.py = touch.py-aabb.y;
             isGrabbed = true;
         }
         else if (closeButtonAABB().contains(touch.px,touch.py))
@@ -32,20 +33,17 @@ namespace luib {
         }
         else
         {
+            printf("Window clicked\n");
             Container::onClick();
         }
     }
 
     void Window::onHold()
     {
-        printf("Window::OnClick\n");
         if(isGrabbed)
         {
-            printf("delta (%d,%d)\n",touch.px - lastTouchPos.px,touch.py - lastTouchPos.py);
-            aabb.x+=touch.px - lastTouchPos.px;
-            aabb.y+=touch.py - lastTouchPos.py;
-            printf("newpos (%d %d)\n",aabb.x,aabb.y);
-            lastTouchPos = touch;
+            moveTo((7*(touch.px-touchOffset.px)+aabb.x)/8,
+                    (7*(touch.py-touchOffset.py)+aabb.y)/8);
         }
     }
     Rectangle Window::titleBarAABB()
@@ -60,13 +58,13 @@ namespace luib {
 
     void Window::onFocus()
     {
-        printf("Window focused\n");
+
     }
 
     void Window::onFocusLoss()
     {
+        printf("Window lost focus\n");
         isGrabbed = false;
-        printf("Window focus lost\n");
     }
 
 }

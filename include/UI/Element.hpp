@@ -29,7 +29,17 @@ namespace luib {
         virtual void update();
         virtual void draw() const;
         virtual bool isTouched();
+        virtual void move(int x,int y);
+        virtual void moveTo(int x,int y);
+
+        void setBgColor(u32 bgColor)
+        {
+            Element::bgColor = bgColor;
+        }
+
         u32 bgColor;
+        Rectangle aabb;
+
     protected:
         virtual void onClick();
         virtual void onHold();
@@ -37,7 +47,6 @@ namespace luib {
         virtual void onFocusLoss();
         virtual void getFocusedElement(Element* &currentFocus);
 
-        Rectangle aabb;
         Container *upper = nullptr;
         Container *root = nullptr;
         int depthLevel = 0;

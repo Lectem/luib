@@ -14,6 +14,10 @@ namespace luib {
 
         void draw() const;
 
+
+    protected:
+        virtual void onClick() override;
+
     private:
         std::string text;
     };

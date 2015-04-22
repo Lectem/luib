@@ -12,7 +12,7 @@ namespace luib {
         Rectangle closeButtonAABB();
         Rectangle titleBarAABB();
         bool isGrabbed = false;
-        touchPosition lastTouchPos;
+        touchPosition touchOffset;
 
     public:
         Window(int x, int y, int w, int h, u32 bgColor = RGBA8(0xFF,0xFF,0xFF,0xFF));
@@ -21,6 +21,8 @@ namespace luib {
         {
             printf("Window has been closed and freed\n");
         }
+        template<class T, class ... Args>
+        std::shared_ptr<T> add(Args &&... args);
 
         virtual void draw() const override;
 
@@ -32,6 +34,20 @@ namespace luib {
         virtual void onFocus() override;
         virtual void onFocusLoss() override;
     };
+
+
+    template<class T, class ... Args>
+    std::shared_ptr<T> Window::add(Args &&... args)
+    {
+        std::shared_ptr<T> element = Container::add<T>(std::forward<Args>(args)...);
+        if(element->aabb.y+element->aabb.h + topBarHeight > aabb.y+aabb.h)
+        {
+            element->aabb.h -= topBarHeight;
+        }
+        element->aabb.y+=topBarHeight;
+        return element;
+    }
+
 
     using Window_shared_ptr = std::shared_ptr<Window>;
 }

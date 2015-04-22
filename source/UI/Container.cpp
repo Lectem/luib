@@ -100,4 +100,24 @@ namespace luib {
             }
         }
     }
+
+    void Container::move(int x, int y)
+    {
+        Element::move(x, y);
+        for(Element_shared_ptr e:children)
+        {
+            e->move(x,y);
+        }
+    }
+
+    void Container::moveTo(int x, int y)
+    {
+        int dx = x-aabb.x;
+        int dy = y-aabb.y;
+        Element::move(dx, dy);
+        for(Element_shared_ptr e:children)
+        {
+            e->move(dx,dy);
+        }
+    }
 }
