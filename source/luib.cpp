@@ -32,8 +32,8 @@ namespace luib{
 
     void Exit()
     {
-        delete topScreenLayout; topScreenLayout = nullptr;
-        delete bottomScreenLayout; bottomScreenLayout = nullptr;
+        topScreenLayout.reset();
+        bottomScreenLayout.reset();
     }
 
     void UpdateInputs()
