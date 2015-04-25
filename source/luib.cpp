@@ -14,17 +14,17 @@ namespace luib{
     u32 kUp =0;
     u32 kHeld =0;
     sf2d_texture * font = nullptr;
-    RelativeLayout* topScreenLayout = nullptr;
-    RelativeLayout* bottomScreenLayout = nullptr;
+    RelativeLayout_shared_ptr topScreenLayout;
+    RelativeLayout_shared_ptr bottomScreenLayout;
     Element* elementWithFocus = nullptr;
 
     void findFocus();
 
     void Init()
     {
-        topScreenLayout= new RelativeLayout(0,0,400,240);
-        bottomScreenLayout=new RelativeLayout(0,0,320,240);
-        elementWithFocus = bottomScreenLayout;
+        topScreenLayout= std::make_shared<RelativeLayout>(0,0,400,240);
+        bottomScreenLayout=std::make_shared<RelativeLayout>(RelativeLayout(0,0,320,240);
+        elementWithFocus = bottomScreenLayout.get();
         font = sf2d_create_texture(8,1024,GPU_RGBA8,SF2D_PLACE_RAM);
         sf2d_fill_texture_from_RGBA8(font, fontData.pixel_data, fontData.width, fontData.height);
         sf2d_texture_tile32(font);

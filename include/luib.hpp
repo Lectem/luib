@@ -13,8 +13,8 @@ namespace luib {
     void UpdateInputs();
     void ResetFocus();
 
-    extern RelativeLayout* topScreenLayout;
-    extern RelativeLayout* bottomScreenLayout;
+    extern RelativeLayout_shared_ptr topScreenLayout;
+    extern RelativeLayout_shared_ptr bottomScreenLayout;
     extern touchPosition touch;
     extern u32 kDown;
     extern u32 kUp;
