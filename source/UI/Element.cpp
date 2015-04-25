@@ -37,12 +37,14 @@ namespace luib {
     }
 
 
-    void Element::getFocusedElement(Element *&currentFocus)
+    bool Element::getFocusedElement(Element *&currentFocus)
     {
-        if(currentFocus->depthLevel < depthLevel)
+        //todo : fix it
+        if(currentFocus == NULL||currentFocus->depthLevel < depthLevel)
         {
             hasFocus = true;
             currentFocus = this;
+            return true;
         }
     }
 

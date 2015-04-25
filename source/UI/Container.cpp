@@ -93,16 +93,18 @@ namespace luib {
         }
     }
 
-    void Container::getFocusedElement(Element* & currentFocus)
+    bool Container::getFocusedElement(Element *&currentFocus)
     {
-        Element::getFocusedElement(currentFocus);
-        for(auto it = children.begin();it!=children.end();++it)
+        bool newFocus = false;
+        for(auto it = children.begin();it!=children.end() && !newFocus;++it)
         {
             if((*it)->aabb.contains(touch.px,touch.py))
             {
-                (*it)->getFocusedElement(currentFocus);
+                newFocus = (*it)->getFocusedElement(currentFocus);
             }
         }
+        newFocus|=Element::getFocusedElement(currentFocus);
+        return newFocus;
     }
 
     void Container::move(int x, int y)

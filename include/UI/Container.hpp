@@ -53,7 +53,7 @@ namespace luib {
 
     protected:
         virtual void onClick() override;
-        virtual void getFocusedElement(Element* &currentFocus) override;
+        virtual bool getFocusedElement(Element *&currentFocus) override;
         void clean();
 
         std::list<std::shared_ptr<Element>> children;
@@ -71,7 +71,6 @@ namespace luib {
         if(element->aabb.y+element->aabb.h >= aabb.h)
         {
             element->aabb.h = aabb.h -element->aabb.y ;
-            printf("element->aabb.y %d\n",element->aabb.y);
         }
         element->aabb.x+=aabb.x;
         element->aabb.y+=aabb.y;

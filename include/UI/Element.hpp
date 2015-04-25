@@ -45,7 +45,7 @@ namespace luib {
         virtual void onHold();
         virtual void onFocus();
         virtual void onFocusLoss();
-        virtual void getFocusedElement(Element* &currentFocus);
+        virtual bool getFocusedElement(Element *&currentFocus);
         void bringToFront();
 
         Container *upper = nullptr;

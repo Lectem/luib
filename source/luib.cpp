@@ -22,8 +22,8 @@ namespace luib{
 
     void Init()
     {
-        topScreenLayout= std::make_shared<RelativeLayout>(0,0,400,240);
-        bottomScreenLayout=std::make_shared<RelativeLayout>(0,0,320,240);
+        topScreenLayout= make_elem<RelativeLayout>(0,0,400,240);
+        bottomScreenLayout= make_elem<RelativeLayout>(0,0,320,240);
         elementWithFocus = bottomScreenLayout.get();
         font = sf2d_create_texture(8,1024,GPU_RGBA8,SF2D_PLACE_RAM);
         sf2d_fill_texture_from_RGBA8(font, fontData.pixel_data, fontData.width, fontData.height);
