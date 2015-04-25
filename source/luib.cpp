@@ -81,6 +81,7 @@ namespace luib{
             {
                 ResetFocus();
             }
+            if(elementWithFocus)elementWithFocus->bringToFront();
             bottomScreenLayout->draw();
         }
         //TODO

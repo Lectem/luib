@@ -33,6 +33,9 @@ namespace luib {
 
         virtual void onFocus() override;
         virtual void onFocusLoss() override;
+
+    public:
+        virtual void bringToFront(Element *element) override;
     };
 
 

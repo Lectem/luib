@@ -72,4 +72,12 @@ namespace luib {
         aabb.x=x;
         aabb.y=y;
     }
+
+    void Element::bringToFront()
+    {
+        if(bringToFrontOnFocus && upper != nullptr)
+        {
+            upper->bringToFront(this);
+        }
+    }
 }

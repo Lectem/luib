@@ -13,9 +13,10 @@ namespace luib {
         draw::rectangle(aabb.x + aabb.w - topBarHeight, aabb.y, topBarHeight, topBarHeight, 0x00FF00FF);
     }
 
-    Window::Window(int x, int y, int w, int h,u32 bgColor) : Container(x, y, w, h,bgColor)
+    Window::Window(int x, int y, int w, int h,u32 bgColor) :
+            Container(x, y, w, h,bgColor)
     {
-
+        Element::bringToFrontOnFocus = true;
     }
 
     void Window::onClick()
@@ -67,4 +68,9 @@ namespace luib {
         isGrabbed = false;
     }
 
+    void Window::bringToFront(Element *element)
+    {
+        Container::bringToFront(element);
+        Element::bringToFront();
+    }
 }

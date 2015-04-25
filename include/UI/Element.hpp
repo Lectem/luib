@@ -46,11 +46,13 @@ namespace luib {
         virtual void onFocus();
         virtual void onFocusLoss();
         virtual void getFocusedElement(Element* &currentFocus);
+        void bringToFront();
 
         Container *upper = nullptr;
         Container *root = nullptr;
         int depthLevel = 0;
         bool hasFocus = false;
+        bool bringToFrontOnFocus = false;
         gfxScreen_t screen;
     };
 

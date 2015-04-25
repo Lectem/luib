@@ -41,6 +41,8 @@ namespace luib {
         void detach(Element_shared_ptr element);
         void detach(Element * element);
 
+
+        virtual void bringToFront(Element * element);
         virtual void update();
         virtual void draw() const;
 
@@ -62,7 +64,6 @@ namespace luib {
     {
         Derived_from<T,Element>();
         std::shared_ptr<T> element = std::make_shared<T>(std::forward<Args>(args)...);
-        attach(element);
         if(element->aabb.x+element->aabb.w >= aabb.w)
         {
             element->aabb.w = aabb.w -element->aabb.x ;
@@ -74,7 +75,8 @@ namespace luib {
         }
         element->aabb.x+=aabb.x;
         element->aabb.y+=aabb.y;
-
+        element->bringToFrontOnFocus |= bringToFrontOnFocus;
+        attach(element);
         return element;
     }
 

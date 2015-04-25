@@ -89,9 +89,11 @@ int main(int argc, char **argv)
 void MyButton::onClick()
 {
     Element::onClick();
-    luib::bottomScreenLayout->add<luib::Window>(rand()%300,rand()%220,
-                                                rand()%50+30,rand()%50+20,
+    auto newWindow = luib::bottomScreenLayout->add<luib::Window>(rand()%300,rand()%220,
+                                                rand()%100+8,rand()%200+8,
                                                 RGBA8(rand()&0xFF,rand()&0xFF,rand()&0xFF,rand()&0xFF));
+    newWindow->add<luib::Text>(2, 2, 250, 250,
+                               "This is a test window with text.");
 }
 
 MyButton::MyButton(int x, int y, int w, int h) : Button(x, y, w, h)

@@ -27,7 +27,7 @@ namespace luib {
         if (root != nullptr)element->root = root;
         else element->root = this;
         element->depthLevel = depthLevel+1;
-        children.emplace_back(element);
+        children.push_front(element);
     }
 
     void Container::detach(Element_shared_ptr element)
@@ -52,27 +52,31 @@ namespace luib {
         }
     }
 
+    void Container::bringToFront(Element *element)
+    {
+        for(auto it = children.begin();it != children.end();++it)
+        {
+            if((*it).get() == element)
+            {
+                //children are in order of draw.
+                //(*it).swap(children.back());
+                children.splice(children.begin(),children,it);
+                break;
+            }
+        }
+    }
     void Container::draw() const
     {
         Element::draw();
-        for(auto &e : children)
+        for(auto it =children.rbegin();it!=children.rend();++it)
         {
-            if(e.use_count())e->draw();
+            if((*it).use_count())(*it)->draw();
         }
     }
 
 
     void Container::onClick()
     {
-/*
-        for(auto it = children.begin();it != children.end() ; ++it)
-        {
-            if(it->use_count() == 0)
-            {
-                it = children.erase(it);
-            }
-            else if((*it)->isTouched()) (*it)->onClick();
-        }*/
         Element::onClick();
     }
 
