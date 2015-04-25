@@ -11,27 +11,58 @@ namespace luib{
     {
         int cur_x= aabb.x+1;
         int cur_y= aabb.y+1;
+        int wordWidth=0;
+        int wordLength=0;
         Element::draw();
-        for(char c :text)
+        char const * str = text.c_str();
+        while(*str)
         {
-            if(c >=32 && c<128)
+            char c = *str;
+            //Printable characters ranges from 32 (' ') to 126 (~)
+            //but we want to treat the space as a special case
+            if(' ' < c && c <= '~')
             {
-                c-=32;
-                if (cur_x + 8 >= aabb.x + aabb.w )//TODO : 8 * longueur mot
+                wordWidth = getWordWidth(str,wordLength);
+
+                //Check if the word fits on one line
+                //if it does, check if we have to go to a new line
+                if ( wordWidth + fontPadding*2 < aabb.w
+                     && cur_x + wordWidth >= aabb.getRight() )
                 {
                     cur_x = aabb.x + 1;
                     cur_y += 9;
                 }
-                if (cur_y + 8 <= aabb.y + aabb.h)
+                for(int wordChar=0;wordChar<wordLength;++wordChar)
                 {
-                    draw::texture_part(font, cur_x, cur_y, 0, c * 8, 8, 8);
-                    cur_x += 9;
+                    int charWidth = getCharWidth(str[wordChar]);
+                    if(cur_x + charWidth > aabb.getRight())
+                    {
+                        if(charWidth+fontPadding*2 >= aabb.w )wordChar++;
+                        cur_x = aabb.x + 1;
+                        cur_y += 9;
+                    }
+                    if(cur_y+8 >= aabb.getBottom()) return;
+                    draw::character(str[wordChar], cur_x, cur_y);
+                    cur_x+=charWidth;
                 }
+                str+=wordLength;
             }
-            else if( c == '\n')
+            else
             {
-                cur_x = aabb.x + 1;
-                cur_y += 9;
+                switch (c)
+                {
+                    case '\n':
+                    cur_x = aabb.x + 1;
+                    cur_y += 9;
+                        break;
+                    case ' ':
+                        cur_x += getCharWidth(' ');
+                        break;
+                    default:
+                        printf("unrecognized character : %c",c);
+                        break;
+                }
+                ++str;
             }
         }
     }
@@ -48,4 +79,24 @@ namespace luib{
         Element::onClick();
         printf("Text clicked\n");
     }
+
+
+    int Text::getCharWidth(char c)
+    {
+        return 8;
+    }
+
+    int Text::getWordWidth(const char * str,int &nbCharacters)
+    {
+        int width =0;
+        nbCharacters=0;
+        while(*str && *str != '\n' && *str!= ' ' && *str != '\t')
+        {
+            width+=getCharWidth(*str)+fontPadding;
+            nbCharacters++;
+            str++;
+        }
+        return width;
+    }
+
 }

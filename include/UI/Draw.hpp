@@ -35,5 +35,13 @@ namespace luib {
          */
         void texture_part(const sf2d_texture *texture, int x, int y, int tex_x, int tex_y, int tex_w, int tex_h);
 
+        /**
+         * @brief Draws a single character
+         * @param c the character to draw
+         * @param x the x coordinate to draw the texture to
+         * @param y the y coordinate to draw the texture to
+         */
+        void character(const char c,const int x,const int y);
+
     }
 }

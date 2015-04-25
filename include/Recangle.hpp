@@ -12,6 +12,11 @@ namespace luib {
         Rectangle() { }
         Rectangle(int x, int y, int w, int h) : x(x), y(y), w(w), h(h) { }
 
+        int getLeft() const { return x; }
+        int getRight() const { return x+w; }
+        int getTop() const { return y; }
+        int getBottom() const { return y+h; }
+
         bool contains(int const px, int const py) const
         {
             int rx= px-x,ry=py-y;
