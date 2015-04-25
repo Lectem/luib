@@ -96,7 +96,7 @@ namespace luib {
     void Container::getFocusedElement(Element* & currentFocus)
     {
         Element::getFocusedElement(currentFocus);
-        for(auto it = children.rbegin();it!=children.rend();++it)
+        for(auto it = children.begin();it!=children.end();++it)
         {
             if((*it)->aabb.contains(touch.px,touch.py))
             {
