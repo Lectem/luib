@@ -14,6 +14,11 @@ namespace luib {
         }
     }
 
+    void Element::measure(sizeConstraint width, sizeConstraint height)
+    {
+        onMeasure(width, height);
+    }
+
     void Element::draw() const
     {
         if(visibility==VISIBLE) onDraw();
@@ -50,6 +55,7 @@ namespace luib {
             currentFocus = this;
             return true;
         }
+        return false;
     }
 
     void Element::onFocus()
@@ -86,4 +92,12 @@ namespace luib {
             upper->bringToFront(this);
         }
     }
+
+    void Element::onMeasure(sizeConstraint width, sizeConstraint height)
+    {
+        if(aabb.w > width.value) aabb.w = width.value;
+        if(aabb.h > height.value) aabb.h = height.value;
+    }
+
 }
+

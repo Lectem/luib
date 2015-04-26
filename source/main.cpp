@@ -82,7 +82,7 @@ int main(int argc, char **argv)
     }
 
     sf2d_fini();
-    //luib::Exit();
+    luib::Exit();
     return 0;
 }
 

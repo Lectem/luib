@@ -66,3 +66,9 @@ void luib::Padding::setValue(int value, Position pos)
             break;
     }
 }
+
+luib::sizeConstraint::sizeConstraint(int value)
+        :value(value)
+{
+
+}

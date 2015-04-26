@@ -43,11 +43,7 @@ namespace luib {
     std::shared_ptr<T> Window::add(Args &&... args)
     {
         std::shared_ptr<T> element = Container::add<T>(std::forward<Args>(args)...);
-        if(element->aabb.y+element->aabb.h + topBarHeight > aabb.y+aabb.h)
-        {
-            element->aabb.h -= topBarHeight;
-        }
-        element->aabb.y+=topBarHeight;
+        element->measure(aabb.w,aabb.h-topBarHeight);
         return element;
     }
 

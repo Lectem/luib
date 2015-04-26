@@ -31,6 +31,7 @@ namespace luib {
             screen=GFX_BOTTOM;
         }
         virtual ~Element();
+        void measure(sizeConstraint width, sizeConstraint height);
         void draw() const;
         virtual void update();
         virtual bool isTouched();
@@ -43,10 +44,11 @@ namespace luib {
         }
 
         u32 bgColor;
-        Rectangle aabb;
+
 
     protected:
         virtual void onDraw() const;
+        virtual void onMeasure(sizeConstraint width, sizeConstraint height);
         virtual void onClick();
         virtual void onHold();
         virtual void onFocus();
@@ -56,6 +58,9 @@ namespace luib {
 
         Container *upper = nullptr;
         Container *root = nullptr;
+
+        Rectangle aabb;
+
         int depthLevel = 0;
         bool hasFocus = false;
         bool bringToFrontOnFocus = false;

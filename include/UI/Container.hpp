@@ -64,6 +64,7 @@ namespace luib {
     {
         Derived_from<T,Element>();
         std::shared_ptr<T> element = std::make_shared<T>(std::forward<Args>(args)...);
+        element->measure(aabb.x,aabb.y);
         if(element->aabb.x+element->aabb.w >= aabb.w)
         {
             element->aabb.w = aabb.w -element->aabb.x ;

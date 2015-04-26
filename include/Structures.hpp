@@ -56,4 +56,16 @@ namespace luib {
     };
 
     using Margin = Padding;
+
+    struct sizeConstraint
+    {
+        enum ConstraintType {
+            AT_MOST,
+            EXACTLY,
+            NOT_SPECIFIED
+        };
+        ConstraintType type: 2;
+        int value : sizeof(int) -2;
+        sizeConstraint(int value);
+    };
 }
