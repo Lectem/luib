@@ -12,7 +12,7 @@ msys_to_cmake_path("$ENV{DEVKITARM}" DEVKITARM)
 msys_to_cmake_path("$ENV{DEVKITPRO}" DEVKITPRO)
 #set(DEVKITARM "$ENV{DEVKITARM}")
 
-SET(CMAKE_FIND_ROOT_PATH ${DEVKITARM} ${DEVKITPRO}/libctru)
+SET(CMAKE_FIND_ROOT_PATH ${DEVKITARM} ${DEVKITPRO}/libctru )
 
 CMAKE_FORCE_C_COMPILER("${DEVKITARM}/bin/arm-none-eabi-gcc.exe" GNU)
 CMAKE_FORCE_CXX_COMPILER("${DEVKITARM}/bin/arm-none-eabi-g++.exe" GNU)
