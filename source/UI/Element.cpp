@@ -16,6 +16,10 @@ namespace luib {
 
     void Element::draw() const
     {
+        if(visibility==VISIBLE) onDraw();
+    }
+    void Element::onDraw() const
+    {
         draw::rectangle(aabb.x,aabb.y,aabb.w,aabb.h,bgColor);
     }
 

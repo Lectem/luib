@@ -13,6 +13,11 @@ namespace luib {
     class Container;
     class Element
     {
+    enum VISIBILITY{
+        VISIBLE,    //!<default, the view will be visible and drawn
+        INVISIBLE,  //!<The view will take the same space as if it was visible, but will not be drawn
+        GONE        //!<The container will consider that this element takes no space and won't draw it
+    };
         friend class Container;
         friend void ::luib::Update();
         friend void ::luib::ResetFocus();
@@ -26,8 +31,8 @@ namespace luib {
             screen=GFX_BOTTOM;
         }
         virtual ~Element();
+        void draw() const;
         virtual void update();
-        virtual void draw() const;
         virtual bool isTouched();
         virtual void move(int x,int y);
         virtual void moveTo(int x,int y);
@@ -41,6 +46,7 @@ namespace luib {
         Rectangle aabb;
 
     protected:
+        virtual void onDraw() const;
         virtual void onClick();
         virtual void onHold();
         virtual void onFocus();
@@ -54,6 +60,7 @@ namespace luib {
         bool hasFocus = false;
         bool bringToFrontOnFocus = false;
         gfxScreen_t screen;
+        VISIBILITY visibility;
     };
 
     using Element_shared_ptr = std::shared_ptr<Element>;

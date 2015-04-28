@@ -6,9 +6,9 @@
 #include <UI/Draw.hpp>
 #include "UI/Window.hpp"
 namespace luib {
-    void Window::draw() const
+    void Window::onDraw() const
     {
-        Container::draw();
+        Container::onDraw();
         draw::rectangle(aabb.x, aabb.y, aabb.w, topBarHeight, 0x0000FFFF);
         draw::rectangle(aabb.x + aabb.w - topBarHeight, aabb.y, topBarHeight, topBarHeight, 0x00FF00FF);
     }

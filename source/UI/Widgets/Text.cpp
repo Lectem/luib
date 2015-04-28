@@ -7,13 +7,13 @@
 #include <UI/Draw.hpp>
 namespace luib{
 
-    void Text::draw() const
+    void Text::onDraw() const
     {
         int cur_x= aabb.x+1;
         int cur_y= aabb.y+1;
         int wordWidth=0;
         int wordLength=0;
-        Element::draw();
+        Element::onDraw();
         char const * str = text.c_str();
         while(*str)
         {

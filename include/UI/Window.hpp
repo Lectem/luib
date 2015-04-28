@@ -24,7 +24,7 @@ namespace luib {
         template<class T, class ... Args>
         std::shared_ptr<T> add(Args &&... args);
 
-        virtual void draw() const override;
+        virtual void onDraw() const override;
 
     protected:
         virtual void onClick() override;

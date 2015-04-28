@@ -43,8 +43,8 @@ namespace luib {
 
 
         virtual void bringToFront(Element * element);
-        virtual void update();
-        virtual void draw() const;
+        virtual void update() override;
+        virtual void onDraw() const override;
 
 
         virtual void move(int x, int y) override;

@@ -65,9 +65,9 @@ namespace luib {
             }
         }
     }
-    void Container::draw() const
+    void Container::onDraw() const
     {
-        Element::draw();
+        Element::onDraw();
         for(auto it =children.rbegin();it!=children.rend();++it)
         {
             if((*it).use_count())(*it)->draw();
