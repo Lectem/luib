@@ -24,7 +24,7 @@ namespace luib {
         template<class T, class ... Args>
         std::shared_ptr<T> add(Args &&... args);
 
-        virtual void onDraw() const override;
+        virtual void onDraw(Canvas &canvas) const override;
 
     protected:
         virtual void onClick() override;
@@ -43,7 +43,7 @@ namespace luib {
     std::shared_ptr<T> Window::add(Args &&... args)
     {
         std::shared_ptr<T> element = Container::add<T>(std::forward<Args>(args)...);
-        element->measure(aabb.w,aabb.h-topBarHeight);
+        element->measure(_aabb.w, _aabb.h-topBarHeight);
         return element;
     }
 

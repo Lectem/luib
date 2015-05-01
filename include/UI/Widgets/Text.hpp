@@ -12,7 +12,7 @@ namespace luib {
     public:
         Text(int x, int y, int w, int h,std::string text);
 
-        void onDraw() const override;
+        void onDraw(Canvas &canvas) const override;
 
 
     protected:

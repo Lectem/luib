@@ -4,16 +4,16 @@
 
 #include <luib.hpp>
 #include "UI/Widgets/Text.hpp"
-#include <UI/Draw.hpp>
+#include "UI/Canvas.hpp"
 namespace luib{
 
-    void Text::onDraw() const
+    void Text::onDraw(Canvas &canvas) const
     {
-        int cur_x= aabb.x+1;
-        int cur_y= aabb.y+1;
+        int cur_x= _aabb.x+1;
+        int cur_y= _aabb.y+1;
         int wordWidth=0;
         int wordLength=0;
-        Element::onDraw();
+        Element::onDraw(canvas);
         char const * str = text.c_str();
         while(*str)
         {
@@ -26,23 +26,23 @@ namespace luib{
 
                 //Check if the word fits on one line
                 //if it does, check if we have to go to a new line
-                if ( wordWidth + fontPadding*2 < aabb.w
-                     && cur_x + wordWidth >= aabb.getRight() )
+                if ( wordWidth + fontPadding*2 < _aabb.w
+                     && cur_x + wordWidth >= _aabb.getRight() )
                 {
-                    cur_x = aabb.x + 1;
+                    cur_x = _aabb.x + 1;
                     cur_y += 9;
                 }
                 for(int wordChar=0;wordChar<wordLength;++wordChar)
                 {
                     int charWidth = getCharWidth(str[wordChar]);
-                    if(cur_x + charWidth > aabb.getRight())
+                    if(cur_x + charWidth > _aabb.getRight())
                     {
-                        if(charWidth+fontPadding*2 >= aabb.w )wordChar++;
-                        cur_x = aabb.x + 1;
+                        if(charWidth+fontPadding*2 >= _aabb.w )wordChar++;
+                        cur_x = _aabb.x + 1;
                         cur_y += 9;
                     }
-                    if(cur_y+8 >= aabb.getBottom()) return;
-                    draw::character(str[wordChar], cur_x, cur_y);
+                    if(cur_y+8 >= _aabb.getBottom()) return;
+                    canvas.character(str[wordChar], cur_x, cur_y);
                     cur_x+=charWidth;
                 }
                 str+=wordLength;
@@ -52,7 +52,7 @@ namespace luib{
                 switch (c)
                 {
                     case '\n':
-                    cur_x = aabb.x + 1;
+                    cur_x = _aabb.x + 1;
                     cur_y += 9;
                         break;
                     case ' ':

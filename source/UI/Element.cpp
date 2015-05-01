@@ -1,5 +1,5 @@
 #include <sf2d.h>
-#include <UI/Draw.hpp>
+#include "UI/Canvas.hpp"
 #include "UI/Element.hpp"
 #include "luib.hpp"
 #include "UI/Container.hpp"
@@ -8,7 +8,7 @@ namespace luib {
 
     Element::~Element()
     {
-        if(hasFocus)
+        if(_hasFocus)
         {
             ResetFocus();
         }
@@ -19,18 +19,25 @@ namespace luib {
         onMeasure(width, height);
     }
 
-    void Element::draw() const
+    void Element::draw(Canvas &canvas) const
     {
-        if(visibility==VISIBLE) onDraw();
+        if(_visibility ==VISIBLE) onDraw(canvas);
     }
-    void Element::onDraw() const
+
+
+    void Element::onDraw(Canvas &canvas) const
     {
-        draw::rectangle(aabb.x,aabb.y,aabb.w,aabb.h,bgColor);
+        canvas.rectangle(_aabb.x, _aabb.y, _aabb.w, _aabb.h,bgColor);
+    }
+
+    void Element::onDrawScrollBars(Canvas &canvas) const
+    {
+
     }
 
     bool Element::isTouched()
     {
-        return screen == GFX_BOTTOM && kHeld&KEY_TOUCH && aabb.contains(touch.px,touch.py);
+        return _screen == GFX_BOTTOM && kHeld&KEY_TOUCH && _aabb.contains(touch.px,touch.py);
     }
 
     void Element::onClick()
@@ -49,9 +56,9 @@ namespace luib {
     bool Element::getFocusedElement(Element *&currentFocus)
     {
         //todo : fix it
-        if(currentFocus == NULL||currentFocus->depthLevel < depthLevel)
+        if(currentFocus == NULL||currentFocus->_depthLevel < _depthLevel)
         {
-            hasFocus = true;
+            _hasFocus = true;
             currentFocus = this;
             return true;
         }
@@ -75,29 +82,33 @@ namespace luib {
 
     void Element::move(int x, int y)
     {
-        aabb.x+=x;
-        aabb.y+=y;
+        _aabb.x+=x;
+        _aabb.y+=y;
     }
 
     void Element::moveTo(int x, int y)
     {
-        aabb.x=x;
-        aabb.y=y;
+        _aabb.x=x;
+        _aabb.y=y;
     }
 
     void Element::bringToFront()
     {
-        if(bringToFrontOnFocus && upper != nullptr)
+        if(_bringToFrontOnFocus && _upper != nullptr)
         {
-            upper->bringToFront(this);
+            _upper->bringToFront(this);
         }
     }
 
     void Element::onMeasure(sizeConstraint width, sizeConstraint height)
     {
-        if(aabb.w > width.value) aabb.w = width.value;
-        if(aabb.h > height.value) aabb.h = height.value;
+        if(_aabb.w > width.value) _aabb.w = width.value;
+        if(_aabb.h > height.value) _aabb.h = height.value;
     }
 
+    void Element::onSizeChanged()
+    {
+
+    }
 }
 

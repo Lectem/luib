@@ -8,11 +8,19 @@
  */
 
 #include <sf2d.h>
+#include "Structures.hpp"
 
 namespace luib {
 
-    namespace draw {
-        /**
+    class Canvas
+    {
+    public:
+
+
+        Canvas(Point const &_position = {0,0}) : _position(_position)
+        { }
+
+/**
          * @brief Draws a rectangle
          * @param x x coordinate of the top left corner of the rectangle
          * @param y y coordinate of the top left corner of the rectangle
@@ -43,5 +51,8 @@ namespace luib {
          */
         void character(const char c,const int x,const int y);
 
-    }
+    private:
+        Point _position;
+    };
+
 }

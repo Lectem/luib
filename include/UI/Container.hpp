@@ -7,6 +7,7 @@
 #pragma once
 
 #include "Element.hpp"
+#include "Canvas.hpp"
 #include <list>
 #include <memory>
 
@@ -44,7 +45,7 @@ namespace luib {
 
         virtual void bringToFront(Element * element);
         virtual void update() override;
-        virtual void onDraw() const override;
+        virtual void onDraw(Canvas &canvas) const override;
 
 
         virtual void move(int x, int y) override;
@@ -64,18 +65,18 @@ namespace luib {
     {
         Derived_from<T,Element>();
         std::shared_ptr<T> element = std::make_shared<T>(std::forward<Args>(args)...);
-        element->measure(aabb.x,aabb.y);
-        if(element->aabb.x+element->aabb.w >= aabb.w)
+        element->measure(_aabb.x, _aabb.y);
+        if(element->_aabb.x+element->_aabb.w >= _aabb.w)
         {
-            element->aabb.w = aabb.w -element->aabb.x ;
+            element->_aabb.w = _aabb.w -element->_aabb.x ;
         }
-        if(element->aabb.y+element->aabb.h >= aabb.h)
+        if(element->_aabb.y+element->_aabb.h >= _aabb.h)
         {
-            element->aabb.h = aabb.h -element->aabb.y ;
+            element->_aabb.h = _aabb.h -element->_aabb.y ;
         }
-        element->aabb.x+=aabb.x;
-        element->aabb.y+=aabb.y;
-        element->bringToFrontOnFocus |= bringToFrontOnFocus;
+        element->_aabb.x+= _aabb.x;
+        element->_aabb.y+= _aabb.y;
+        element->_bringToFrontOnFocus |= _bringToFrontOnFocus;
         attach(element);
         return element;
     }

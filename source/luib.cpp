@@ -17,6 +17,8 @@ namespace luib{
     RelativeLayout_shared_ptr topScreenLayout;
     RelativeLayout_shared_ptr bottomScreenLayout;
     Element* elementWithFocus = nullptr;
+    Canvas topCanvas;
+    Canvas bottomCanvas;
 
     void findFocus();
 
@@ -82,17 +84,17 @@ namespace luib{
                 ResetFocus();
             }
             if(elementWithFocus)elementWithFocus->bringToFront();
-            bottomScreenLayout->draw();
+            bottomScreenLayout->draw(bottomCanvas);
         }
         //TODO
-        //topScreenLayout.draw();
+        //topScreenLayout.draw(topCanvas);
     }
 
     void ResetFocus()
     {
         if(elementWithFocus != nullptr)
         {
-            elementWithFocus->hasFocus = false;
+            elementWithFocus->_hasFocus = false;
             elementWithFocus->onFocusLoss();
         }
         elementWithFocus = bottomScreenLayout.get();

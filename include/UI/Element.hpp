@@ -6,7 +6,7 @@
 #include <memory>
 #include "utils.hpp"
 #include "Structures.hpp"
-
+#include "Canvas.hpp"
 namespace luib {
 
 
@@ -26,13 +26,14 @@ namespace luib {
         Element(){}
         Element(int x ,int y,int w = 1,int h = 1,u32 bgColor = RGBA8(0,0,0,0)):
                 bgColor(bgColor),
-                aabb{x,y,w,h}
+                _aabb{x,y,w,h}
         {
-            screen=GFX_BOTTOM;
+            _screen =GFX_BOTTOM;
         }
         virtual ~Element();
         void measure(sizeConstraint width, sizeConstraint height);
-        void draw() const;
+        //void layout();
+        void draw(Canvas &canvas) const;
         virtual void update();
         virtual bool isTouched();
         virtual void move(int x,int y);
@@ -47,8 +48,12 @@ namespace luib {
 
 
     protected:
-        virtual void onDraw() const;
+
         virtual void onMeasure(sizeConstraint width, sizeConstraint height);
+        //virtual void onLayout();
+        virtual void onDraw(Canvas &canvas) const;
+        virtual void onDrawScrollBars(Canvas &canvas) const;
+        virtual void onSizeChanged();
         virtual void onClick();
         virtual void onHold();
         virtual void onFocus();
@@ -56,16 +61,17 @@ namespace luib {
         virtual bool getFocusedElement(Element *&currentFocus);
         void bringToFront();
 
-        Container *upper = nullptr;
-        Container *root = nullptr;
+        Container *_upper = nullptr;
+        Container *_root = nullptr;
 
-        Rectangle aabb;
+        Rectangle _aabb;
+        Size _measuredSize;
 
-        int depthLevel = 0;
-        bool hasFocus = false;
-        bool bringToFrontOnFocus = false;
-        gfxScreen_t screen;
-        VISIBILITY visibility;
+        int _depthLevel = 0;
+        bool _hasFocus = false;
+        bool _bringToFrontOnFocus = false;
+        gfxScreen_t _screen;
+        VISIBILITY _visibility;
     };
 
     using Element_shared_ptr = std::shared_ptr<Element>;

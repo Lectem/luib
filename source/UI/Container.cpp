@@ -23,10 +23,10 @@ namespace luib {
 
     void Container::attach(Element_shared_ptr element)
     {
-        element->upper = this;
-        if (root != nullptr)element->root = root;
-        else element->root = this;
-        element->depthLevel = depthLevel+1;
+        element->_upper = this;
+        if (_root != nullptr)element->_root = _root;
+        else element->_root = this;
+        element->_depthLevel = _depthLevel +1;
         children.push_front(element);
     }
 
@@ -65,12 +65,12 @@ namespace luib {
             }
         }
     }
-    void Container::onDraw() const
+    void Container::onDraw(Canvas &canvas) const
     {
-        Element::onDraw();
+        Element::onDraw(canvas);
         for(auto it =children.rbegin();it!=children.rend();++it)
         {
-            if((*it).use_count())(*it)->draw();
+            if((*it).use_count())(*it)->draw(canvas);
         }
     }
 
@@ -98,7 +98,7 @@ namespace luib {
         bool newFocus = false;
         for(auto it = children.begin();it!=children.end() && !newFocus;++it)
         {
-            if((*it)->aabb.contains(touch.px,touch.py))
+            if((*it)->_aabb.contains(touch.px,touch.py))
             {
                 newFocus = (*it)->getFocusedElement(currentFocus);
             }
@@ -118,8 +118,8 @@ namespace luib {
 
     void Container::moveTo(int x, int y)
     {
-        int dx = x-aabb.x;
-        int dy = y-aabb.y;
+        int dx = x- _aabb.x;
+        int dy = y- _aabb.y;
         Element::move(dx, dy);
         for(Element_shared_ptr e:children)
         {
