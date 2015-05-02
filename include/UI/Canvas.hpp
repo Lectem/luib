@@ -61,6 +61,7 @@ namespace luib {
 
         Rectangle getFrame() const;
         void setFrame(const Rectangle &frame);
+        void setFrameAndOrigin(const Rectangle &frame);
 
     private:
         Point _origin;

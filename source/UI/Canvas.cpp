@@ -63,8 +63,10 @@ namespace luib {
         return _frame;
     }
 
-    void Canvas::setFrame(const Rectangle &frame)
+    void Canvas::setFrameAndOrigin(const Rectangle &frame)
     {
+        _origin.x=frame.x;
+        _origin.y=frame.y;
         _frame = frame;
     }
 }
