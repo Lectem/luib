@@ -43,6 +43,7 @@ namespace luib {
 
     void Canvas::texture_part(const sf2d_texture *texture, int x, int y, int tex_x, int tex_y, int tex_w, int tex_h)
     {
+        //TODO: clipping
         sf2d_draw_texture_part(texture,
                                _origin.x+x,
                                _origin.y+y,

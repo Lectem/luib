@@ -41,14 +41,20 @@ namespace luib {
 
     void Element::draw(Canvas &canvas) const
     {
-        if(_visibility ==VISIBLE) onDraw(canvas);
+        if(_visibility ==VISIBLE)
+        {
+            drawBG(canvas);
+            onDraw(canvas);
+        }
     }
 
 
-    void Element::onDraw(Canvas &canvas) const
+    void Element::drawBG(Canvas &canvas) const
     {
         canvas.rectangle(0,0,getWidth(),getHeight(),bgColor);
     }
+
+    void Element::onDraw(Canvas &canvas) const { }
 
     void Element::onDrawScrollBars(Canvas &canvas) const
     {
@@ -159,5 +165,6 @@ namespace luib {
         _isLayoutNeeded=true;
         if(_upper)_upper->requestLayout();
     }
+
 }
 

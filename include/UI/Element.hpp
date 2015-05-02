@@ -63,6 +63,8 @@ namespace luib {
 
 
     protected:
+        void drawBG(Canvas &canvas) const;
+
         virtual void onMeasure(sizeConstraint width, sizeConstraint height);
         virtual void onLayout(Rectangle const &coordinates);
         virtual void onDraw(Canvas &canvas) const;
