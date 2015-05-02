@@ -3,6 +3,7 @@
 //
 #include <3ds.h>
 #include <UI/Layouts/RelativeLayout.hpp>
+#include <3ds/services/hid.h>
 #include "luib.hpp"
 
 
@@ -106,6 +107,6 @@ namespace luib{
 
     void findFocus()
     {
-        bottomScreenLayout->getFocusedElement(elementWithFocus);
+        bottomScreenLayout->getFocusedElement(elementWithFocus,Point{touch.px,touch.py});
     }
 }

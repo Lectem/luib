@@ -62,7 +62,7 @@ namespace luib {
         virtual void onAttach(Element * element);
         virtual void onDetach(Element * element);
         virtual void onClick() override;
-        virtual bool getFocusedElement(Element *&currentFocus) override;
+        virtual bool getFocusedElement(Element *&currentFocus,const Point &stylusPos) override;
         void clean();
 
         std::vector<std::shared_ptr<Element>> children;

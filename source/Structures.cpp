@@ -63,6 +63,11 @@ namespace luib {
     }
 
 
+    bool Rectangle::contains(const Point & point) const
+    {
+        return contains(point.x,point.y);
+    }
+
     bool Rectangle::contains(int const px, int const py) const
     {
         int rx = px - x, ry = py - y;

@@ -71,7 +71,7 @@ namespace luib {
     }
 
 
-    bool Element::getFocusedElement(Element *&currentFocus)
+    bool Element::getFocusedElement(Element *&currentFocus,const Point stylusPos)
     {
         //todo : fix it
         if(currentFocus == NULL||currentFocus->_depthLevel < _depthLevel)

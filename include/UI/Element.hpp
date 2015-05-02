@@ -75,7 +75,7 @@ namespace luib {
         virtual void onHold(){}
         virtual void onFocus(){}
         virtual void onFocusLoss(){}
-        virtual bool getFocusedElement(Element *&currentFocus);
+        virtual bool getFocusedElement(Element *&currentFocus,const Point stylusPos);
         void bringToFront();
 
         Margin _margin;

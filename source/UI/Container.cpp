@@ -106,17 +106,21 @@ namespace luib {
         }
     }
 
-    bool Container::getFocusedElement(Element *&currentFocus)
+    bool Container::getFocusedElement(Element *&currentFocus,const Point &stylusPos)
     {
         bool newFocus = false;
-        for(auto it = children.rbegin();it!=children.rend() && !newFocus;++it)
+        for(size_t child = children.size();child>=0 && !newFocus;--child)
         {
-            if((*it)->_aabb.contains(touch.px,touch.py))
+            if(children[child]->_aabb.contains(stylusPos))
             {
-                newFocus = (*it)->getFocusedElement(currentFocus);
+                Point relativeSytlusPos = stylusPos;
+                relativeSytlusPos.x-= children[child]->_aabb.x;
+                relativeSytlusPos.y-= children[child]->_aabb.y;
+                newFocus = children[child]->getFocusedElement(currentFocus,relativeSytlusPos);
+                Rectangle &childAABB = children[child]->_aabb;
             }
         }
-        newFocus|=Element::getFocusedElement(currentFocus);
+        newFocus|=Element::getFocusedElement(currentFocus,stylusPos);
         return newFocus;
     }
 

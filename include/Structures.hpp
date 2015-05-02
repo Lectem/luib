@@ -62,6 +62,7 @@ namespace luib {
             return !(rl==rr);
         }
 
+        bool contains(const Point & point) const;
         bool contains(int const px, int const py) const;
     };
 
