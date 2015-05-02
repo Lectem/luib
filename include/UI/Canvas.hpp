@@ -19,7 +19,7 @@ namespace luib {
 
         Canvas(Point const &origin = {0,0}) :
                 _origin(origin),
-                _frame({0,0,160,120}){ }
+                _frame({0,0,1024,1024}){ }
 
 
         /**

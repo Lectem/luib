@@ -21,12 +21,11 @@ namespace luib {
 
     void Element::layout(Rectangle const & coordinates)
     {
-        if(_isLayoutNeeded)
+        if(coordinates != _aabb || _isLayoutNeeded)
         {
             _aabb = coordinates;
             onLayout(coordinates);
         }
-        _isLayoutNeeded=false;
     }
 
     int Element::getWidth() const
@@ -52,13 +51,6 @@ namespace luib {
     void Element::drawBG(Canvas &canvas) const
     {
         canvas.rectangle(0,0,getWidth(),getHeight(),bgColor);
-    }
-
-    void Element::onDraw(Canvas &canvas) const { }
-
-    void Element::onDrawScrollBars(Canvas &canvas) const
-    {
-
     }
 
     bool Element::isTouched()
@@ -91,20 +83,7 @@ namespace luib {
         return false;
     }
 
-    void Element::onFocus()
-    {
 
-    }
-
-    void Element::onFocusLoss()
-    {
-
-    }
-
-    void Element::onHold()
-    {
-
-    }
 
     void Element::move(int x, int y)
     {
@@ -129,15 +108,6 @@ namespace luib {
         setMeasuredSize(width.value,height.value);
     }
 
-    void Element::onSizeChanged()
-    {
-
-    }
-
-    void Element::onLayout(Rectangle const &coordinates)
-    {
-
-    }
 
     void Element::detachFromParent()
     {
@@ -164,6 +134,15 @@ namespace luib {
     {
         _isLayoutNeeded=true;
         if(_upper)_upper->requestLayout();
+    }
+
+    void Element::forceLayout()
+    {
+        _isLayoutNeeded = true;
+    }
+    void Element::setBgColor(u32 bgColor)
+    {
+        Element::bgColor = bgColor;
     }
 
 }

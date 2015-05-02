@@ -49,12 +49,16 @@ namespace luib {
     }
     Rectangle Window::titleBarAABB() const
     {
-        return Rectangle(_margin.left , _margin.top, getWidth() - topBarHeight, topBarHeight);
+        printf("titleBarAABB = %d %d %d %d\n",_margin.left,_margin.top,getWidth()-topBarHeight-_margin.right,topBarHeight);
+        return Rectangle(_margin.left , _margin.top, getWidth() - (topBarHeight+_margin.right), topBarHeight);
     }
 
     Rectangle Window::closeButtonAABB() const
     {
-        return Rectangle(_margin.left + getWidth() - topBarHeight, getHeight(), topBarHeight, topBarHeight);
+        printf("closeButtonAABB = %d %d %d %d\n",_margin.left + getWidth() - (topBarHeight+_margin.right), _margin.top,
+               topBarHeight, topBarHeight);
+        return Rectangle(_margin.left + getWidth() - (topBarHeight+_margin.right), _margin.top,
+                         topBarHeight, topBarHeight);
     }
 
     void Window::onFocus()
@@ -72,5 +76,15 @@ namespace luib {
     {
         Container::bringToFront(element);
         Element::bringToFront();
+    }
+
+
+    void Window::onLayout(Rectangle const &coordinates)
+    {
+        printf("Window::onLayout> getWidth()=%d getHeight()=%d\n",getWidth(),getHeight());
+        for(auto& childPtr:children)
+        {
+            childPtr->layout({0,topBarHeight,getWidth(),getHeight()-topBarHeight});
+        }
     }
 }

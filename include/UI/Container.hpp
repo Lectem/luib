@@ -57,7 +57,7 @@ namespace luib {
     protected:
         void setChildAABB(Element* child,Rectangle const & aabb);
         Rectangle const & getChildAABB(Element* child);
-        virtual void layout(Rectangle const &coordinates) override;
+        virtual void onLayout(Rectangle const &coordinates) override;
         virtual void onDraw(Canvas &canvas) const override;
         virtual void onAttach(Element * element);
         virtual void onDetach(Element * element);
@@ -65,7 +65,7 @@ namespace luib {
         virtual bool getFocusedElement(Element *&currentFocus) override;
         void clean();
 
-        std::list<std::shared_ptr<Element>> children;
+        std::vector<std::shared_ptr<Element>> children;
     };
 
     template<class T, class ... Args>

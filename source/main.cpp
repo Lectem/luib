@@ -33,10 +33,11 @@ int main(int argc, char **argv)
 
     if (luib::bottomScreenLayout)
     {
-        luib::Text_shared_ptr someText = luib::bottomScreenLayout->add<luib::Text>(55, 20, 150, 150,
-                                                                                   "abcdefghijklmnopqrstuvxyz\n0123456789");
+        luib::Text_shared_ptr someText =
+                luib::bottomScreenLayout->add<luib::Text>(100, 20, 150, 150,
+                                                          "abcdefghijklmnopqrstuvxyz\n0123456789");
         someText->bgColor = 0xAA0000FF;
-/*
+
         auto button = luib::make_elem<MyButton>(0, 230, 10, 10);
         button->bgColor = 0xFFFF00FF;
         luib::bottomScreenLayout->attach(button);
@@ -50,7 +51,7 @@ int main(int argc, char **argv)
         luib::Window_shared_ptr w = luib::bottomScreenLayout->add<luib::Window>(35, 150, 80, 80);
         luib::Text_shared_ptr wText = w->add<luib::Text>(2, 2, 250, 250,
                                                          "This is a test window with text.");
-        wText->setBgColor(RGBA8(0xFF,0xFF,0,0xFF));*/
+        wText->setBgColor(RGBA8(0x00,0xFF,0xFF,0xFF));
     }
     else
     {

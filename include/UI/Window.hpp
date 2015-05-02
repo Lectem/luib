@@ -34,6 +34,9 @@ namespace luib {
 
     public:
         virtual void bringToFront(Element *element) override;
+
+    protected:
+        virtual void onLayout(Rectangle const &coordinates) override;
     };
 
 

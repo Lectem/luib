@@ -32,57 +32,60 @@ namespace luib {
         if (_root != nullptr)element->_root = _root;
         else element->_root = this;
         element->_depthLevel = _depthLevel +1;
-        children.push_front(element);
+        children.push_back(element);
         onAttach(element.get());
     }
 
     void Container::detach(Element_shared_ptr element)
     {
-        for(auto &child:children)
-        {
-            if(child == element)
-            {
-                onDetach(child.get());
-                child.reset();
-            }
-        }
+        detach(element.get());
     }
 
     void Container::detach(Element * const element)
     {
-        for(auto &e:children)
+        if(element != nullptr)
         {
-            if(e.get() == element)
+            for (auto childPtrIt = children.begin(); childPtrIt != children.end(); ++childPtrIt)
             {
-                e.reset();
+                if (childPtrIt->get() == element)
+                {
+                    (*childPtrIt)->_upper = nullptr;
+                    onDetach(childPtrIt->get());
+                    children.erase(childPtrIt);
+                    return;
+                }
             }
         }
     }
 
     void Container::bringToFront(Element *element)
     {
-        for(auto it = children.begin();it != children.end();++it)
+        const size_t size=children.size();
+        for(size_t i=0;i<size;++i)
         {
-            if((*it).get() == element)
+            if(children[i].get() == element)
             {
-                //children are in order of draw.
-                //(*it).swap(children.back());
-                children.splice(children.begin(),children,it);
+                auto childToBringFront = children[i];
+                for(;i>0;--i)
+                {
+                    children[i]=std::move(children[i-1]);
+                }
+                children[0] = childToBringFront;
                 break;
             }
         }
     }
     void Container::onDraw(Canvas &canvas) const
     {
+        Point oldOrigin = canvas.getOrigin();
         Element::onDraw(canvas);
-        for(auto it =children.rbegin();it!=children.rend();++it)
+        for(auto it =children.cbegin();it!=children.cend();++it)
         {
             Element_shared_ptr child = *it;
-            canvas.setFrameAndOrigin(child->_aabb);
+            canvas.setFrameAndOrigin(child->_aabb+oldOrigin);
             if((*it).use_count())(*it)->draw(canvas);
         }
-        canvas.setFrameAndOrigin(_aabb);
-    }
+        canvas.setFrameAndOrigin({oldOrigin.x,oldOrigin.y,getWidth(),getHeight()});    }
 
 
     void Container::onClick()
@@ -106,7 +109,7 @@ namespace luib {
     bool Container::getFocusedElement(Element *&currentFocus)
     {
         bool newFocus = false;
-        for(auto it = children.begin();it!=children.end() && !newFocus;++it)
+        for(auto it = children.rbegin();it!=children.rend() && !newFocus;++it)
         {
             if((*it)->_aabb.contains(touch.px,touch.py))
             {
@@ -169,7 +172,7 @@ namespace luib {
         element->_bringToFrontOnFocus |= _bringToFrontOnFocus;
     }
 
-    void Container::layout(Rectangle const &coordinates)
+    void Container::onLayout(Rectangle const &coordinates)
     {
         for(auto& childPtr:children)
         {

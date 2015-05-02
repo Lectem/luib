@@ -31,15 +31,19 @@ namespace luib {
             _screen =GFX_BOTTOM;
         }
         virtual ~Element();
+
+        //Do not overload/ride. Override onMeasure instead
         void measure(sizeConstraint width, sizeConstraint height);
 
         Size getMeasuredSize() const;
         void setMeasuredSize(const Size measuredSize);
         void setMeasuredSize(const int width,const int height);
 
-
-        virtual void layout(Rectangle const & coordinates);
+        //Do not overload/ride. Override onLayout instead
+        void layout(Rectangle const & coordinates);
         void requestLayout();
+        //same as requestLayout but doesn't call requestLayout on parent
+        void forceLayout();
 
         int getWidth() const;
         int getHeight() const;
@@ -54,10 +58,7 @@ namespace luib {
         void detachFromParent();
 
 
-        void setBgColor(u32 bgColor)
-        {
-            Element::bgColor = bgColor;
-        }
+        void setBgColor(u32 bgColor);
 
         u32 bgColor;
 
@@ -66,14 +67,14 @@ namespace luib {
         void drawBG(Canvas &canvas) const;
 
         virtual void onMeasure(sizeConstraint width, sizeConstraint height);
-        virtual void onLayout(Rectangle const &coordinates);
-        virtual void onDraw(Canvas &canvas) const;
-        virtual void onDrawScrollBars(Canvas &canvas) const;
-        virtual void onSizeChanged();
+        virtual void onLayout(Rectangle const &coordinates){};
+        virtual void onDraw(Canvas &canvas) const{};
+        virtual void onDrawScrollBars(Canvas &canvas) const{};
+        virtual void onSizeChanged(){};
         virtual void onClick();
-        virtual void onHold();
-        virtual void onFocus();
-        virtual void onFocusLoss();
+        virtual void onHold(){}
+        virtual void onFocus(){}
+        virtual void onFocusLoss(){}
         virtual bool getFocusedElement(Element *&currentFocus);
         void bringToFront();
 

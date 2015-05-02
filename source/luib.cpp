@@ -52,6 +52,10 @@ namespace luib{
         UpdateInputs();
         if(bottomScreenLayout)
         {
+
+            bottomScreenLayout->measure(sizeConstraint{320,sizeConstraint::EXACTLY},
+                                        sizeConstraint{240,sizeConstraint::EXACTLY});
+            bottomScreenLayout->layout(Rectangle{0,0,320,240});
             bottomScreenLayout->update();
             if(kDown&KEY_TOUCH)
             {

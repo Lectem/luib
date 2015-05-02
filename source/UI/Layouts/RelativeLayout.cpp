@@ -21,11 +21,11 @@ namespace luib {
     }
 
 
-    void RelativeLayout::layout(Rectangle const &coordinates)
+    void RelativeLayout::onLayout(Rectangle const &coordinates)
     {
         for(auto &childPtr :children)
         {
-            childPtr->layout(getChildAABB(this));
+            childPtr->layout(getChildAABB(childPtr.get()));
         }
     }
 }

@@ -15,7 +15,7 @@ namespace luib {
     protected:
         virtual void onMeasure(sizeConstraint width, sizeConstraint height) override;
 
-        virtual void layout(Rectangle const &coordinates) override;
+        virtual void onLayout(Rectangle const &coordinates) override;
     };
 
     using RelativeLayout_shared_ptr = std::shared_ptr<RelativeLayout>;

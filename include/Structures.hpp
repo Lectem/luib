@@ -45,8 +45,26 @@ namespace luib {
         void clip(Rectangle const & clipArea);
         Point clipAndGetOffset(Rectangle const & clipArea);
 
+        friend Rectangle operator+(const Rectangle &r,const Point p)
+        {
+            Rectangle res = r;
+            res.x+=p.x;
+            res.y+=p.y;
+            return res;
+        }
+
+        friend bool operator==(const Rectangle & rl,const Rectangle & rr)
+        {
+            return rl.x==rr.x && rl.y == rr.y && rl.w==rr.w && rl.h == rr.h;
+        }
+        friend bool operator!=(const Rectangle & rl,const Rectangle & rr)
+        {
+            return !(rl==rr);
+        }
+
         bool contains(int const px, int const py) const;
     };
+
 
     struct Padding
     {
@@ -78,5 +96,8 @@ namespace luib {
         int value : (sizeof(int)*8-2);
         ConstraintType type: 2;
         sizeConstraint(int value);
+
+        sizeConstraint(int value, const ConstraintType &type) : value(value), type(type)
+        { }
     };
 }
