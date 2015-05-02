@@ -23,20 +23,27 @@ namespace luib {
 
     void Container::attach(Element_shared_ptr element)
     {
+        if(element->_upper)
+        {
+            fprintf(stderr,"Can't attach a view to two parents\n");
+            return;
+        }
         element->_upper = this;
         if (_root != nullptr)element->_root = _root;
         else element->_root = this;
         element->_depthLevel = _depthLevel +1;
         children.push_front(element);
+        onAttach(element.get());
     }
 
     void Container::detach(Element_shared_ptr element)
     {
-        for(auto &e:children)
+        for(auto &child:children)
         {
-            if(e == element)
+            if(child == element)
             {
-                e.reset();
+                onDetach(child.get());
+                child.reset();
             }
         }
     }
@@ -70,8 +77,11 @@ namespace luib {
         Element::onDraw(canvas);
         for(auto it =children.rbegin();it!=children.rend();++it)
         {
+            Element_shared_ptr child = *it;
+            canvas.setOrigin(child->_aabb.x, child->_aabb.y);
             if((*it).use_count())(*it)->draw(canvas);
         }
+        canvas.setOrigin(_aabb.x, _aabb.y);
     }
 
 
@@ -112,7 +122,7 @@ namespace luib {
         Element::move(x, y);
         for(Element_shared_ptr e:children)
         {
-            e->move(x,y);
+            moveChild(e.get(),x,y);
         }
     }
 
@@ -120,10 +130,66 @@ namespace luib {
     {
         int dx = x- _aabb.x;
         int dy = y- _aabb.y;
-        Element::move(dx, dy);
-        for(Element_shared_ptr e:children)
+        move(dx, dy);
+    }
+
+    void Container::moveChild(Element * child,int x, int y)
+    {
+        //Do not move out of bound
+        if(child->_aabb.x+x+child->_aabb.w>=getWidth())
+            child->_aabb.x=getWidth()-child->_aabb.w;
+        else if(child->_aabb.x+x<0)
+            child->_aabb.x=0;
+        else
+            child->_aabb.x+=x;
+
+
+        if(child->_aabb.y+y+child->_aabb.h>=getHeight())
+            child->_aabb.y=getHeight()-child->_aabb.h;
+        else if(child->_aabb.y+y<0)
+            child->_aabb.y=0;
+        else
+            child->_aabb.y+=y;
+    }
+
+    void Container::moveChildTo(Element * child,int x, int y)
+    {
+        int dx = x- _aabb.x;
+        int dy = y- _aabb.y;
+        moveChild(child,dx, dy);
+    }
+
+    void Container::clean()
+    {
+        children.clear();
+    }
+
+    void Container::onAttach(Element *element)
+    {
+        element->_bringToFrontOnFocus |= _bringToFrontOnFocus;
+    }
+
+    void Container::layout(Rectangle const &coordinates)
+    {
+        for(auto& childPtr:children)
         {
-            e->move(dx,dy);
+            //TODO finish and correct this
+            childPtr->layout(coordinates);
         }
+    }
+
+    void Container::setChildAABB(Element *child, Rectangle const &aabb)
+    {
+        child->_aabb=aabb;
+    }
+
+    Rectangle const &Container::getChildAABB(Element *child)
+    {
+        return child->_aabb;
+    }
+
+    void Container::onDetach(Element *element)
+    {
+
     }
 }

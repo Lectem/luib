@@ -9,11 +9,22 @@ namespace luib{
 
     void Text::onDraw(Canvas &canvas) const
     {
-        int cur_x= _aabb.x+1;
-        int cur_y= _aabb.y+1;
+
+        int left = _margin.left;
+        int top = _margin.top;
+        int right = getWidth()-_margin.right;
+        int bot = getHeight() - _margin.bot;
+        int cur_x= left+1;
+        int cur_y= top+1;
+
         int wordWidth=0;
         int wordLength=0;
+
+
+        Point canvasPos = canvas.getOrigin();
+        printf("drawing text %d %d %d %d\n",canvasPos.x,canvasPos.y,left,right);
         Element::onDraw(canvas);
+
         char const * str = text.c_str();
         while(*str)
         {
@@ -26,22 +37,22 @@ namespace luib{
 
                 //Check if the word fits on one line
                 //if it does, check if we have to go to a new line
-                if ( wordWidth + fontPadding*2 < _aabb.w
-                     && cur_x + wordWidth >= _aabb.getRight() )
+                if ( wordWidth + fontPadding*2 < right
+                     && cur_x + wordWidth >= right )
                 {
-                    cur_x = _aabb.x + 1;
+                    cur_x =  + 1;
                     cur_y += 9;
                 }
                 for(int wordChar=0;wordChar<wordLength;++wordChar)
                 {
                     int charWidth = getCharWidth(str[wordChar]);
-                    if(cur_x + charWidth > _aabb.getRight())
+                    if(cur_x + charWidth > right)
                     {
-                        if(charWidth+fontPadding*2 >= _aabb.w )wordChar++;
-                        cur_x = _aabb.x + 1;
+                        if(charWidth+fontPadding*2 >= right )wordChar++;
+                        cur_x = left;
                         cur_y += 9;
                     }
-                    if(cur_y+8 >= _aabb.getBottom()) return;
+                    if(cur_y+8 >= bot) return;
                     canvas.character(str[wordChar], cur_x, cur_y);
                     cur_x+=charWidth;
                 }
@@ -52,7 +63,7 @@ namespace luib{
                 switch (c)
                 {
                     case '\n':
-                    cur_x = _aabb.x + 1;
+                    cur_x = left;
                     cur_y += 9;
                         break;
                     case ' ':
@@ -71,7 +82,6 @@ namespace luib{
             Element(x, y, w, h),
             text(text)
     {
-
     }
 
     void Text::onClick()

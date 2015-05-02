@@ -19,6 +19,26 @@ namespace luib {
         onMeasure(width, height);
     }
 
+    void Element::layout(Rectangle const & coordinates)
+    {
+        if(_isLayoutNeeded)
+        {
+            _aabb = coordinates;
+            onLayout(coordinates);
+        }
+        _isLayoutNeeded=false;
+    }
+
+    int Element::getWidth() const
+    {
+        return _aabb.w;
+    }
+
+    int Element::getHeight() const
+    {
+        return _aabb.h;
+    }
+
     void Element::draw(Canvas &canvas) const
     {
         if(_visibility ==VISIBLE) onDraw(canvas);
@@ -27,7 +47,7 @@ namespace luib {
 
     void Element::onDraw(Canvas &canvas) const
     {
-        canvas.rectangle(_aabb.x, _aabb.y, _aabb.w, _aabb.h,bgColor);
+        canvas.rectangle(0,0,getWidth(),getHeight(),bgColor);
     }
 
     void Element::onDrawScrollBars(Canvas &canvas) const
@@ -82,14 +102,12 @@ namespace luib {
 
     void Element::move(int x, int y)
     {
-        _aabb.x+=x;
-        _aabb.y+=y;
+        if(_upper)_upper->moveChild(this,x,y);
     }
 
     void Element::moveTo(int x, int y)
     {
-        _aabb.x=x;
-        _aabb.y=y;
+        if(_upper)_upper->moveChildTo(this,x,y);
     }
 
     void Element::bringToFront()
@@ -102,13 +120,44 @@ namespace luib {
 
     void Element::onMeasure(sizeConstraint width, sizeConstraint height)
     {
-        if(_aabb.w > width.value) _aabb.w = width.value;
-        if(_aabb.h > height.value) _aabb.h = height.value;
+        setMeasuredSize(width.value,height.value);
     }
 
     void Element::onSizeChanged()
     {
 
+    }
+
+    void Element::onLayout(Rectangle const &coordinates)
+    {
+
+    }
+
+    void Element::detachFromParent()
+    {
+        if(_upper)_upper->detach(this);
+    }
+
+    Size Element::getMeasuredSize() const
+    {
+        return _measuredSize;
+    }
+
+    void Element::setMeasuredSize(const Size measuredSize)
+    {
+        _measuredSize = _measuredSize;
+    }
+
+    void Element::setMeasuredSize(const int width, const int height)
+    {
+        _measuredSize.x = width;
+        _measuredSize.y = height;
+    }
+
+    void Element::requestLayout()
+    {
+        _isLayoutNeeded=true;
+        if(_upper)_upper->requestLayout();
     }
 }
 

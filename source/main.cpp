@@ -33,10 +33,10 @@ int main(int argc, char **argv)
 
     if (luib::bottomScreenLayout)
     {
-        luib::Text_shared_ptr someText = luib::bottomScreenLayout->add<luib::Text>(55, 20, 250, 250,
+        luib::Text_shared_ptr someText = luib::bottomScreenLayout->add<luib::Text>(55, 20, 150, 150,
                                                                                    "abcdefghijklmnopqrstuvxyz\n0123456789");
-        someText->bgColor = 0x000000FF;
-
+        someText->bgColor = 0xAA0000FF;
+/*
         auto button = luib::make_elem<MyButton>(0, 230, 10, 10);
         button->bgColor = 0xFFFF00FF;
         luib::bottomScreenLayout->attach(button);
@@ -50,7 +50,7 @@ int main(int argc, char **argv)
         luib::Window_shared_ptr w = luib::bottomScreenLayout->add<luib::Window>(35, 150, 80, 80);
         luib::Text_shared_ptr wText = w->add<luib::Text>(2, 2, 250, 250,
                                                          "This is a test window with text.");
-        wText->setBgColor(RGBA8(0xFF,0xFF,0,0xFF));
+        wText->setBgColor(RGBA8(0xFF,0xFF,0,0xFF));*/
     }
     else
     {
@@ -72,11 +72,11 @@ int main(int argc, char **argv)
 
         //luib::UpdateInputs();
         luib::Update();
-        printf("\x1b[0;0H%f\n",sf2d_get_fps());
+        //printf("\x1b[0;0H%f\n",sf2d_get_fps());
         sf2d_end_frame();
 
         sf2d_swapbuffers();
-
+        while (1){}
         //Wait for VBlank
         frame++;
     }

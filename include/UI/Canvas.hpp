@@ -17,10 +17,12 @@ namespace luib {
     public:
 
 
-        Canvas(Point const &_position = {0,0}) : _position(_position)
-        { }
+        Canvas(Point const &origin = {0,0}) :
+                _origin(origin),
+                _frame({0,0,160,120}){ }
 
-/**
+
+        /**
          * @brief Draws a rectangle
          * @param x x coordinate of the top left corner of the rectangle
          * @param y y coordinate of the top left corner of the rectangle
@@ -28,6 +30,7 @@ namespace luib {
          * @param w rectangle height
          * @param color the color to draw the rectangle
          */
+        void rectangle(Rectangle rectangle,const u32 color);
         void rectangle(const int x, const int y, const int w, const int h, const u32 color);
 
 
@@ -51,8 +54,16 @@ namespace luib {
          */
         void character(const char c,const int x,const int y);
 
+        void setOrigin(Point const &origin);
+        void setOrigin(int const x, int const y);
+        Point getOrigin() const;
+
+        Rectangle getFrame() const;
+        void setFrame(const Rectangle &frame);
+
     private:
-        Point _position;
+        Point _origin;
+        Rectangle _frame;
     };
 
 }

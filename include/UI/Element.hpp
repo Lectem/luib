@@ -24,7 +24,7 @@ namespace luib {
         friend void ::luib::findFocus();
     public:
         Element(){}
-        Element(int x ,int y,int w = 1,int h = 1,u32 bgColor = RGBA8(0,0,0,0)):
+        Element(int x =0,int y=0,int w = 1,int h = 1,u32 bgColor = RGBA8(0,0,0,0)):
                 bgColor(bgColor),
                 _aabb{x,y,w,h}
         {
@@ -32,12 +32,27 @@ namespace luib {
         }
         virtual ~Element();
         void measure(sizeConstraint width, sizeConstraint height);
-        //void layout();
+
+        Size getMeasuredSize() const;
+        void setMeasuredSize(const Size measuredSize);
+        void setMeasuredSize(const int width,const int height);
+
+
+        virtual void layout(Rectangle const & coordinates);
+        void requestLayout();
+
+        int getWidth() const;
+        int getHeight() const;
+
+        //Do not overload/ride. Override onDraw instead
         void draw(Canvas &canvas) const;
         virtual void update();
         virtual bool isTouched();
         virtual void move(int x,int y);
         virtual void moveTo(int x,int y);
+
+        void detachFromParent();
+
 
         void setBgColor(u32 bgColor)
         {
@@ -48,9 +63,8 @@ namespace luib {
 
 
     protected:
-
         virtual void onMeasure(sizeConstraint width, sizeConstraint height);
-        //virtual void onLayout();
+        virtual void onLayout(Rectangle const &coordinates);
         virtual void onDraw(Canvas &canvas) const;
         virtual void onDrawScrollBars(Canvas &canvas) const;
         virtual void onSizeChanged();
@@ -61,15 +75,24 @@ namespace luib {
         virtual bool getFocusedElement(Element *&currentFocus);
         void bringToFront();
 
+        Margin _margin;
+        bool _bringToFrontOnFocus = false;
+
+    private:
         Container *_upper = nullptr;
         Container *_root = nullptr;
 
+        /**
+         * AABB stands for aligned axis bounding box
+         * It represents the rectangle allocated to the view by the parent
+         * It is relative to the parent origin and should only be used internally for layout purposes
+         */
         Rectangle _aabb;
         Size _measuredSize;
 
         int _depthLevel = 0;
+        bool _isLayoutNeeded = true;
         bool _hasFocus = false;
-        bool _bringToFrontOnFocus = false;
         gfxScreen_t _screen;
         VISIBILITY _visibility;
     };

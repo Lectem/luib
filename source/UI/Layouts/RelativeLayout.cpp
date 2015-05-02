@@ -8,4 +8,24 @@ namespace luib {
     {
 
     }
+
+    void RelativeLayout::onMeasure(sizeConstraint width, sizeConstraint height)
+    {
+        setMeasuredSize(width.value,height.value);
+        width.type=sizeConstraint::AT_MOST;
+        height.type=sizeConstraint::AT_MOST;
+        for(auto &childPtr :children)
+        {
+            childPtr->measure(width,height);
+        }
+    }
+
+
+    void RelativeLayout::layout(Rectangle const &coordinates)
+    {
+        for(auto &childPtr :children)
+        {
+            childPtr->layout(getChildAABB(this));
+        }
+    }
 }

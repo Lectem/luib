@@ -29,10 +29,18 @@ namespace luib {
         Rectangle(int x=0, int y=0, int w=0, int h=0)
                 : x(x), y(y), w(w), h(h) { }
 
+        void setCoordinates(int const left,int const top,int const right,int const bottom);
         int getLeft() const;
         int getRight() const;
         int getTop() const;
         int getBottom() const;
+
+        void setLeft(int left);
+        void setRight(int right);
+        void setTop(int top);
+        void setBottom(int bottom);
+        
+        void clip(Rectangle const & clipArea);
 
         bool contains(int const px, int const py) const;
     };
@@ -64,8 +72,8 @@ namespace luib {
             EXACTLY,
             NOT_SPECIFIED
         };
+        int value : (sizeof(int)*8-2);
         ConstraintType type: 2;
-        int value : sizeof(int) -2;
         sizeConstraint(int value);
     };
 }

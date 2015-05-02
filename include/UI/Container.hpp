@@ -32,7 +32,7 @@ namespace luib {
         template<class T, class ... Args>
         std::shared_ptr<T> add(Args &&... args);
 
-        /**
+        virtual /**
          * @brief Attaches an element to the container
          * @param element a shared pointer to the element.
          * @warning Since we are using shared pointers, keep in mind that if you don't keep a shared_ptr to the element, it might be destroyed by the UI.
@@ -45,14 +45,22 @@ namespace luib {
 
         virtual void bringToFront(Element * element);
         virtual void update() override;
-        virtual void onDraw(Canvas &canvas) const override;
 
 
         virtual void move(int x, int y) override;
-
         virtual void moveTo(int x, int y) override;
 
+
+        virtual void moveChild(Element * child,int x, int y);
+        virtual void moveChildTo(Element * child,int x, int y);
+
     protected:
+        void setChildAABB(Element* child,Rectangle const & aabb);
+        Rectangle const & getChildAABB(Element* child);
+        virtual void layout(Rectangle const &coordinates) override;
+        virtual void onDraw(Canvas &canvas) const override;
+        virtual void onAttach(Element * element);
+        virtual void onDetach(Element * element);
         virtual void onClick() override;
         virtual bool getFocusedElement(Element *&currentFocus) override;
         void clean();
@@ -65,18 +73,6 @@ namespace luib {
     {
         Derived_from<T,Element>();
         std::shared_ptr<T> element = std::make_shared<T>(std::forward<Args>(args)...);
-        element->measure(_aabb.x, _aabb.y);
-        if(element->_aabb.x+element->_aabb.w >= _aabb.w)
-        {
-            element->_aabb.w = _aabb.w -element->_aabb.x ;
-        }
-        if(element->_aabb.y+element->_aabb.h >= _aabb.h)
-        {
-            element->_aabb.h = _aabb.h -element->_aabb.y ;
-        }
-        element->_aabb.x+= _aabb.x;
-        element->_aabb.y+= _aabb.y;
-        element->_bringToFrontOnFocus |= _bringToFrontOnFocus;
         attach(element);
         return element;
     }

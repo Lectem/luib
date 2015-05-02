@@ -9,8 +9,8 @@ namespace luib {
     void Window::onDraw(Canvas &canvas) const
     {
         Container::onDraw(canvas);
-        canvas.rectangle(_aabb.x, _aabb.y, _aabb.w, topBarHeight, 0x0000FFFF);
-        canvas.rectangle(_aabb.x + _aabb.w - topBarHeight, _aabb.y, topBarHeight, topBarHeight, 0x00FF00FF);
+        canvas.rectangle(titleBarAABB(), 0x0000FFFF);
+        canvas.rectangle(closeButtonAABB(), 0x00FF00FF);
     }
 
     Window::Window(int x, int y, int w, int h,u32 bgColor) :
@@ -23,14 +23,14 @@ namespace luib {
     {
         if(titleBarAABB().contains(touch.px,touch.py))
         {
-            touchOffset.px = touch.px- _aabb.x;
-            touchOffset.py = touch.py- _aabb.y;
+            touchOffset.px = touch.px- _margin.left;
+            touchOffset.py = touch.py- _margin.top;
             isGrabbed = true;
         }
         else if (closeButtonAABB().contains(touch.px,touch.py))
         {
             bgColor^=0xFF000000;
-            _upper->detach(this);
+            detachFromParent();
         }
         else
         {
@@ -43,18 +43,18 @@ namespace luib {
     {
         if(isGrabbed)
         {
-            moveTo((7*(touch.px-touchOffset.px)+ _aabb.x)/8,
-                    (7*(touch.py-touchOffset.py)+ _aabb.y)/8);
+            moveTo((7*(touch.px-touchOffset.px)+ _margin.left)/8,
+                    (7*(touch.py-touchOffset.py)+_margin.top)/8);
         }
     }
-    Rectangle Window::titleBarAABB()
+    Rectangle Window::titleBarAABB() const
     {
-        return Rectangle(_aabb.x , _aabb.y, _aabb.w - topBarHeight, topBarHeight);
+        return Rectangle(_margin.left , _margin.top, getWidth() - topBarHeight, topBarHeight);
     }
 
-    Rectangle Window::closeButtonAABB()
+    Rectangle Window::closeButtonAABB() const
     {
-        return Rectangle(_aabb.x + _aabb.w - topBarHeight, _aabb.y, topBarHeight, topBarHeight);
+        return Rectangle(_margin.left + getWidth() - topBarHeight, getHeight(), topBarHeight, topBarHeight);
     }
 
     void Window::onFocus()
