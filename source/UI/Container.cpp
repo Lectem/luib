@@ -78,10 +78,10 @@ namespace luib {
         for(auto it =children.rbegin();it!=children.rend();++it)
         {
             Element_shared_ptr child = *it;
-            canvas.setOrigin(child->_aabb.x, child->_aabb.y);
+            canvas.setFrameAndOrigin(child->_aabb);
             if((*it).use_count())(*it)->draw(canvas);
         }
-        canvas.setOrigin(_aabb.x, _aabb.y);
+        canvas.setFrameAndOrigin(_aabb);
     }
 
 
