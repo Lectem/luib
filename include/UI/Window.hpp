@@ -9,11 +9,11 @@ namespace luib {
     class Window : public Container
     {
         int topBarHeight = 8;
-        Point offset;
+
         Rectangle closeButtonAABB() const;
         Rectangle titleBarAABB() const;
         bool isGrabbed = false;
-        touchPosition touchOffset;
+        touchPosition lastTouchPosition;
 
     public:
         Window(int x, int y, int w, int h, u32 bgColor = RGBA8(0xFF,0xFF,0xFF,0xFF));
@@ -26,8 +26,7 @@ namespace luib {
         virtual void onDraw(Canvas &canvas) const override;
 
     protected:
-        virtual void onClick() override;
-        virtual void onHold() override;
+        virtual void onTouchEvent(const TouchEvent &touchEvent) override;
         virtual void onFocus() override;
         virtual void onFocusLoss() override;
 

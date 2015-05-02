@@ -14,7 +14,6 @@ namespace luib {
 
     protected:
         virtual void onMeasure(sizeConstraint width, sizeConstraint height) override;
-
         virtual void onLayout(Rectangle const &coordinates) override;
     };
 

@@ -19,44 +19,51 @@ namespace luib {
         Element::_bringToFrontOnFocus = true;
     }
 
-    void Window::onClick()
+    void Window::onTouchEvent(const TouchEvent &touchEvent)
     {
-        if(titleBarAABB().contains(touch.px,touch.py))
+        switch(touchEvent.type)
         {
-            touchOffset.px = touch.px- _margin.left;
-            touchOffset.py = touch.py- _margin.top;
-            isGrabbed = true;
-        }
-        else if (closeButtonAABB().contains(touch.px,touch.py))
-        {
-            bgColor^=0xFF000000;
-            detachFromParent();
-        }
-        else
-        {
-            printf("Window clicked\n");
-            Container::onClick();
+            case TouchEvent::DOWN:
+                if (titleBarAABB().contains(touchEvent.viewPos))
+                {
+                    lastTouchPosition.px = touch.px;
+                    lastTouchPosition.py = touch.py;
+                    isGrabbed = true;
+                    printf("Window title bar clicked\n");
+                }
+                else if (closeButtonAABB().contains(touchEvent.viewPos))
+                {
+                    bgColor ^= 0xFF000000;
+                    detachFromParent();
+                    printf("Window close button clicked\n");
+                }
+                else
+                {
+                    printf("Window clicked\n");
+                    Container::onTouchEvent(touchEvent);
+                }
+                break;
+            case TouchEvent::HELD:
+                if(isGrabbed)
+                {
+                    move(touch.px-lastTouchPosition.px,touch.py-lastTouchPosition.py);
+                    lastTouchPosition.px = touch.px;
+                    lastTouchPosition.py = touch.py;
+                }
+                break;
+            case TouchEvent::UP:break;
+            case TouchEvent::NONE:break;
         }
     }
 
-    void Window::onHold()
-    {
-        if(isGrabbed)
-        {
-            moveTo((7*(touch.px-touchOffset.px)+ _margin.left)/8,
-                    (7*(touch.py-touchOffset.py)+_margin.top)/8);
-        }
-    }
+
     Rectangle Window::titleBarAABB() const
     {
-        printf("titleBarAABB = %d %d %d %d\n",_margin.left,_margin.top,getWidth()-topBarHeight-_margin.right,topBarHeight);
         return Rectangle(_margin.left , _margin.top, getWidth() - (topBarHeight+_margin.right), topBarHeight);
     }
 
     Rectangle Window::closeButtonAABB() const
     {
-        printf("closeButtonAABB = %d %d %d %d\n",_margin.left + getWidth() - (topBarHeight+_margin.right), _margin.top,
-               topBarHeight, topBarHeight);
         return Rectangle(_margin.left + getWidth() - (topBarHeight+_margin.right), _margin.top,
                          topBarHeight, topBarHeight);
     }
@@ -81,7 +88,6 @@ namespace luib {
 
     void Window::onLayout(Rectangle const &coordinates)
     {
-        printf("Window::onLayout> getWidth()=%d getHeight()=%d\n",getWidth(),getHeight());
         for(auto& childPtr:children)
         {
             childPtr->layout({0,topBarHeight,getWidth(),getHeight()-topBarHeight});

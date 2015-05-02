@@ -20,9 +20,6 @@ namespace luib{
         int wordWidth=0;
         int wordLength=0;
 
-
-        Point canvasPos = canvas.getOrigin();
-        printf("drawing text %d %d %d %d\n",canvasPos.x,canvasPos.y,left,right);
         Element::onDraw(canvas);
 
         char const * str = text.c_str();
@@ -84,9 +81,9 @@ namespace luib{
     {
     }
 
-    void Text::onClick()
+    void Text::onTouchEvent(const TouchEvent &touchEvent)
     {
-        Element::onClick();
+        Element::onTouchEvent(touchEvent);
         printf("Text clicked\n");
     }
 

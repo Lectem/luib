@@ -2,8 +2,7 @@
 // Created by Lectem on 14/04/2015.
 //
 #include <3ds.h>
-#include <UI/Layouts/RelativeLayout.hpp>
-#include <3ds/services/hid.h>
+#include "UI/Layouts/RelativeLayout.hpp"
 #include "luib.hpp"
 
 
@@ -21,7 +20,7 @@ namespace luib{
     Canvas topCanvas;
     Canvas bottomCanvas;
 
-    void findFocus();
+    void dispatchTouchEvent(TouchEvent touchEvent);
 
     void Init()
     {
@@ -53,42 +52,36 @@ namespace luib{
         UpdateInputs();
         if(bottomScreenLayout)
         {
+            TouchEvent touchEvent;
+
+            bottomScreenLayout->update();
+            if(kDown&KEY_TOUCH)
+            {
+                touchEvent.type=TouchEvent::DOWN;
+            }
+            else if (kHeld&KEY_TOUCH)
+            {
+                touchEvent.type=TouchEvent::HELD;
+            }
+            if(kUp&KEY_TOUCH)
+            {
+                touchEvent.type=TouchEvent::UP;
+            }
+            if(touchEvent.type!=TouchEvent::NONE)
+            {
+                dispatchTouchEvent(touchEvent);
+            }
+            if(elementWithFocus != nullptr)
+            {
+                elementWithFocus->onFocus();
+                elementWithFocus->bringToFront();
+            }
+
+
 
             bottomScreenLayout->measure(sizeConstraint{320,sizeConstraint::EXACTLY},
                                         sizeConstraint{240,sizeConstraint::EXACTLY});
             bottomScreenLayout->layout(Rectangle{0,0,320,240});
-            bottomScreenLayout->update();
-            if(kDown&KEY_TOUCH)
-            {
-                //Update focus only on new click
-                findFocus();
-                if(elementWithFocus != nullptr)
-                {
-                    elementWithFocus->onClick();
-                }
-                //Check again, in case the element has lost focus or was destroyed...
-                if(elementWithFocus != nullptr)
-                {
-                    elementWithFocus->onFocus();
-                }
-            }
-            if (kHeld&KEY_TOUCH)
-            {
-                if(elementWithFocus != nullptr)
-                {
-                    elementWithFocus->onHold();
-                }
-                //Check again, in case the element has lost focus or was destroyed...
-                if(elementWithFocus != nullptr)
-                {
-                    elementWithFocus->onFocus();
-                }
-            }
-            if(kUp&KEY_TOUCH)
-            {
-                ResetFocus();
-            }
-            if(elementWithFocus)elementWithFocus->bringToFront();
             bottomScreenLayout->draw(bottomCanvas);
         }
         //TODO
@@ -105,8 +98,15 @@ namespace luib{
         elementWithFocus = bottomScreenLayout.get();
     }
 
-    void findFocus()
+    void dispatchTouchEvent(TouchEvent touchEvent)
     {
-        bottomScreenLayout->getFocusedElement(elementWithFocus,Point{touch.px,touch.py});
+        Element* oldElementWithFocus=elementWithFocus;
+        touchEvent.rawPos={touch.px,touch.py};
+        touchEvent.viewPos= touchEvent.rawPos;
+        if(bottomScreenLayout)bottomScreenLayout->getFocusedElement(elementWithFocus, touchEvent);
+        if(oldElementWithFocus!= nullptr && oldElementWithFocus != elementWithFocus)
+        {
+            oldElementWithFocus->onFocusLoss();
+        }
     }
 }

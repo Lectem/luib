@@ -1,4 +1,5 @@
 #include <sf2d.h>
+#include <Inputs.h>
 #include "UI/Canvas.hpp"
 #include "UI/Element.hpp"
 #include "luib.hpp"
@@ -58,7 +59,7 @@ namespace luib {
         return _screen == GFX_BOTTOM && kHeld&KEY_TOUCH && _aabb.contains(touch.px,touch.py);
     }
 
-    void Element::onClick()
+    void Element::onTouchEvent(const TouchEvent &touchEvent)
     {
         bgColor^=0xFFFFFF00;
     }
@@ -71,13 +72,14 @@ namespace luib {
     }
 
 
-    bool Element::getFocusedElement(Element *&currentFocus,const Point stylusPos)
+    bool Element::getFocusedElement(Element *&currentFocus,TouchEvent const & touchEvent)
     {
         //todo : fix it
         if(currentFocus == NULL||currentFocus->_depthLevel < _depthLevel)
         {
             _hasFocus = true;
             currentFocus = this;
+            onTouchEvent(touchEvent);
             return true;
         }
         return false;

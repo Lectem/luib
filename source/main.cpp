@@ -9,19 +9,25 @@
 #include "UI/Layouts/LinearLayout.hpp"
 #include "luib.hpp"
 
-
 class MyButton:public luib::Button{
 public:
 
     MyButton(int x, int y, int w, int h);
+    virtual void onTouchEvent(const luib::TouchEvent &touchEvent) override;
+};
 
-    virtual void onClick() override;
+
+class ClearConsoleButton:public luib::Button{
+public:
+
+    ClearConsoleButton(int x, int y, int w, int h);
+    virtual void onTouchEvent(const luib::TouchEvent &touchEvent) override;
 };
 
 int main(int argc, char **argv)
 {
     sf2d_init();
-    sf2d_set_clear_color(RGBA8(0x40, 0x40, 0x40, 0xFF));
+    sf2d_set_clear_color(RGBA8(0x00, 0x00, 0x00, 0x00));
 
     //Initialize console on top screen. Using NULL as the second argument tells the console library to use the internal console structure as current one
     consoleInit(GFX_TOP, 0);
@@ -33,10 +39,14 @@ int main(int argc, char **argv)
 
     if (luib::bottomScreenLayout)
     {
+        luib::bottomScreenLayout->bgColor = RGBA8(0x55,0x55,0x55,0xFFF);
         luib::Text_shared_ptr someText =
                 luib::bottomScreenLayout->add<luib::Text>(100, 20, 150, 150,
                                                           "abcdefghijklmnopqrstuvxyz\n0123456789");
         someText->bgColor = 0xAA0000FF;
+
+        auto clearButton = luib::bottomScreenLayout->add<ClearConsoleButton>(0,0,10,10);
+        clearButton->bgColor = 0xFF0000FF;
 
         auto button = luib::make_elem<MyButton>(0, 230, 10, 10);
         button->bgColor = 0xFFFF00FF;
@@ -51,7 +61,7 @@ int main(int argc, char **argv)
         luib::Window_shared_ptr w = luib::bottomScreenLayout->add<luib::Window>(35, 150, 80, 80);
         luib::Text_shared_ptr wText = w->add<luib::Text>(2, 2, 250, 250,
                                                          "This is a test window with text.");
-        wText->setBgColor(RGBA8(0x00,0xFF,0xFF,0xFF));
+        wText->setBgColor(RGBA8(0xFF,0xFF,0xFF,0xFF));
     }
     else
     {
@@ -73,12 +83,10 @@ int main(int argc, char **argv)
 
         //luib::UpdateInputs();
         luib::Update();
-        //printf("\x1b[0;0H%f\n",sf2d_get_fps());
+        printf("\x1b[0;0H%f\n",sf2d_get_fps());
         sf2d_end_frame();
-
         sf2d_swapbuffers();
-        while (1){}
-        //Wait for VBlank
+
         frame++;
     }
 
@@ -87,17 +95,32 @@ int main(int argc, char **argv)
     return 0;
 }
 
-void MyButton::onClick()
+void MyButton::onTouchEvent(const luib::TouchEvent &touchEvent)
 {
-    Element::onClick();
-    auto newWindow = luib::bottomScreenLayout->add<luib::Window>(rand()%300,rand()%220,
-                                                rand()%100+8,rand()%200+8,
-                                                RGBA8(rand()&0xFF,rand()&0xFF,rand()&0xFF,rand()&0xFF));
-    newWindow->add<luib::Text>(2, 2, 250, 250,
-                               "This is a test window with text.");
+    if(touchEvent.type==luib::TouchEvent::DOWN)
+    {
+        luib::Element::onTouchEvent(touchEvent);
+        auto newWindow = luib::bottomScreenLayout->add<luib::Window>(rand() % 300, rand() % 220,
+                                                                     rand() % 100 + 8, rand() % 200 + 8,
+                                                                     RGBA8(rand() & 0xFF, rand() & 0xFF, rand() & 0xFF,
+                                                                           rand() & 0xFF));
+        newWindow->add<luib::Text>(2, 2, 250, 250,
+                                   "This is a test window with text.");
+    }
 }
 
 MyButton::MyButton(int x, int y, int w, int h) : Button(x, y, w, h)
 {
 
+}
+
+ClearConsoleButton::ClearConsoleButton(int x, int y, int w, int h) : Button(x, y, w, h)
+{
+
+}
+
+void ClearConsoleButton::onTouchEvent(const luib::TouchEvent &touchEvent)
+{
+    if(touchEvent.type==luib::TouchEvent::DOWN)
+        consoleClear();
 }

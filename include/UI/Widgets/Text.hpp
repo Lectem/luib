@@ -16,7 +16,7 @@ namespace luib {
 
 
     protected:
-        virtual void onClick() override;
+        virtual void onTouchEvent(const TouchEvent &touchEvent) override;
 
         /**
          * @brief Returns the width of a character.

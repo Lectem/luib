@@ -7,6 +7,8 @@
 #include "utils.hpp"
 #include "Structures.hpp"
 #include "Canvas.hpp"
+#include "Inputs.h"
+
 namespace luib {
 
 
@@ -21,10 +23,10 @@ namespace luib {
         friend class Container;
         friend void ::luib::Update();
         friend void ::luib::ResetFocus();
-        friend void ::luib::findFocus();
+        friend void ::luib::dispatchTouchEvent(TouchEvent touchEvent);
     public:
         Element(){}
-        Element(int x =0,int y=0,int w = 1,int h = 1,u32 bgColor = RGBA8(0,0,0,0)):
+        Element(int x =0,int y=0,int w = 1,int h = 1,u32 bgColor = 0):
                 bgColor(bgColor),
                 _aabb{x,y,w,h}
         {
@@ -71,11 +73,10 @@ namespace luib {
         virtual void onDraw(Canvas &canvas) const{};
         virtual void onDrawScrollBars(Canvas &canvas) const{};
         virtual void onSizeChanged(){};
-        virtual void onClick();
-        virtual void onHold(){}
+        virtual void onTouchEvent(const TouchEvent &touchEvent);
         virtual void onFocus(){}
         virtual void onFocusLoss(){}
-        virtual bool getFocusedElement(Element *&currentFocus,const Point stylusPos);
+        virtual bool getFocusedElement(Element *&currentFocus,TouchEvent const & touchEvent);
         void bringToFront();
 
         Margin _margin;

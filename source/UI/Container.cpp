@@ -45,6 +45,7 @@ namespace luib {
     {
         if(element != nullptr)
         {
+            if(element->_hasFocus)ResetFocus();
             for (auto childPtrIt = children.begin(); childPtrIt != children.end(); ++childPtrIt)
             {
                 if (childPtrIt->get() == element)
@@ -66,11 +67,12 @@ namespace luib {
             if(children[i].get() == element)
             {
                 auto childToBringFront = children[i];
-                for(;i>0;--i)
+                size_t j;
+                for(j = i; j+1 < size; ++j)
                 {
-                    children[i]=std::move(children[i-1]);
+                    children[j]=std::move(children[j+1]);
                 }
-                children[0] = childToBringFront;
+                children[j] = childToBringFront;
                 break;
             }
         }
@@ -88,9 +90,9 @@ namespace luib {
         canvas.setFrameAndOrigin({oldOrigin.x,oldOrigin.y,getWidth(),getHeight()});    }
 
 
-    void Container::onClick()
+    void Container::onTouchEvent(const TouchEvent &touchEvent)
     {
-        Element::onClick();
+        Element::onTouchEvent(touchEvent);
     }
 
 
@@ -106,21 +108,30 @@ namespace luib {
         }
     }
 
-    bool Container::getFocusedElement(Element *&currentFocus,const Point &stylusPos)
+    bool Container::getFocusedElement(Element *&currentFocus,TouchEvent const & touchEvent)
     {
         bool newFocus = false;
-        for(size_t child = children.size();child>=0 && !newFocus;--child)
+        for(int child = children.size()-1;child>=0 && !newFocus;--child)
         {
-            if(children[child]->_aabb.contains(stylusPos))
+            if(children[child].get() == nullptr)
             {
-                Point relativeSytlusPos = stylusPos;
-                relativeSytlusPos.x-= children[child]->_aabb.x;
-                relativeSytlusPos.y-= children[child]->_aabb.y;
-                newFocus = children[child]->getFocusedElement(currentFocus,relativeSytlusPos);
-                Rectangle &childAABB = children[child]->_aabb;
+                printf("%d.........................\n",child);
+            }
+            else
+            {
+                Point relativeSytlusPos = touchEvent.viewPos;
+                relativeSytlusPos.x -= children[child]->_aabb.x;
+                relativeSytlusPos.y -= children[child]->_aabb.y;
+                Rectangle childAABB = children[child]->_aabb;
+                TouchEvent dispatchedTouchEvent = touchEvent;
+                dispatchedTouchEvent.viewPos=relativeSytlusPos;
+                if (children[child]->_aabb.contains(touchEvent.viewPos))
+                {
+                    newFocus = children[child]->getFocusedElement(currentFocus, dispatchedTouchEvent);
+                }
             }
         }
-        newFocus|=Element::getFocusedElement(currentFocus,stylusPos);
+        newFocus|=Element::getFocusedElement(currentFocus,touchEvent);
         return newFocus;
     }
 

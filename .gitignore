@@ -3,6 +3,7 @@ build
 cbuild
 html
 netload.bat
+android
 
 # Created by .ignore support plugin (hsz.mobi)
 ### C template

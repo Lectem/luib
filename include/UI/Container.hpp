@@ -10,15 +10,16 @@
 #include "Canvas.hpp"
 #include <list>
 #include <memory>
+#include <Inputs.h>
 
 namespace luib {
     class Container : public Element
     {
         friend class Element;
         friend void ::luib::Update();
-        friend void ::luib::findFocus();
+        friend void ::luib::dispatchTouchEvent(TouchEvent touchEvent);
     public:
-        Container(int x = 0, int y = 0, int w = 0, int h = 0,u32 bgColor = RGBA8(0,0,0,0));
+        Container(int x = 0, int y = 0, int w = 0, int h = 0,u32 bgColor = 0);
 
         ~Container();
 
@@ -61,8 +62,8 @@ namespace luib {
         virtual void onDraw(Canvas &canvas) const override;
         virtual void onAttach(Element * element);
         virtual void onDetach(Element * element);
-        virtual void onClick() override;
-        virtual bool getFocusedElement(Element *&currentFocus,const Point &stylusPos) override;
+        virtual void onTouchEvent(const TouchEvent &touchEvent) override;
+        virtual bool getFocusedElement(Element *&currentFocus,TouchEvent const & touchEvent) override;
         void clean();
 
         std::vector<std::shared_ptr<Element>> children;
