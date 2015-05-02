@@ -17,6 +17,8 @@ namespace luib {
         int x, y;
         Point(int x=0, int y=0)
                 : x(x), y(y) { }
+        Point & operator += (Point const & rp);
+        Point & operator -= (Point const & rp);
     };
 
     using Size = Point;
@@ -41,6 +43,7 @@ namespace luib {
         void setBottom(int bottom);
         
         void clip(Rectangle const & clipArea);
+        Point clipAndGetOffset(Rectangle const & clipArea);
 
         bool contains(int const px, int const py) const;
     };

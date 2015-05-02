@@ -35,27 +35,25 @@ namespace luib {
     }
     void Canvas::rectangle(const int x,const int y,const int w,const int h,const u32 color)
     {
-        rectangle({_origin.x+x,
-                   _origin.y+y,
-                   w,h},
+        rectangle(Rectangle{x,y+y, w,h},
                 color);
     }
 
+    void Canvas::texture_part(const sf2d_texture *texture,Rectangle dst,Point texOffset)
+    {
+        dst.x+=_origin.x;
+        dst.y+=_origin.y;
+        texOffset+=dst.clipAndGetOffset(_frame);
+        sf2d_draw_texture_part(texture,dst.x,dst.y,texOffset.x,texOffset.y,dst.w,dst.h);
+    }
     void Canvas::texture_part(const sf2d_texture *texture, int x, int y, int tex_x, int tex_y, int tex_w, int tex_h)
     {
-        //TODO: clipping
-        sf2d_draw_texture_part(texture,
-                               _origin.x+x,
-                               _origin.y+y,
-                               tex_x,tex_y,
-                               tex_w,tex_h);
+        texture_part(texture,Rectangle{x,y,tex_w,tex_h},Point{tex_x,tex_y});
     }
 
     void Canvas::character(const char c, const int x, const int y)
     {
-        texture_part(font,
-                             _origin.x+x,
-                             _origin.y+y,
+        texture_part(font, x, y,
                              0, (c-32) * 8,
                              8, 8);
     }

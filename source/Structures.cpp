@@ -8,6 +8,23 @@
  */
 
 namespace luib {
+
+
+    Point &Point::operator+=(Point const &rp)
+    {
+        x+=rp.x;
+        y+=rp.y;
+        return *this;
+    }
+
+    Point &Point::operator-=(Point const &rp)
+    {
+        x-=rp.x;
+        y-=rp.y;
+        return *this;
+    }
+
+
     int Rectangle::getLeft() const
     {
         return x;
@@ -125,4 +142,37 @@ namespace luib {
             if (getBottom() > clipArea.getBottom())setBottom(clipArea.getBottom());
         }
     }
+
+
+    Point Rectangle::clipAndGetOffset(Rectangle const &clipArea)
+    {
+        Point offset;
+        int diff;
+        if (getLeft() > clipArea.getRight() || clipArea.getLeft() > getRight())w = 0;
+        else
+        {
+            diff = clipArea.x - x;
+            if (diff > 0)
+            {
+                offset.x=diff;
+                w -= diff;
+                x = clipArea.x;
+            }
+            if (getRight() > clipArea.getRight())setRight(clipArea.getRight());
+
+        }
+        if (getTop() > clipArea.getBottom() || clipArea.getTop() > getBottom())h = 0;
+        {
+            diff = clipArea.y - y;
+            if (diff > 0)
+            {
+                offset.y=diff;
+                h -= diff;
+                y = clipArea.y;
+            }
+            if (getBottom() > clipArea.getBottom())setBottom(clipArea.getBottom());
+        }
+        return offset;
+    }
+
 }

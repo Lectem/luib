@@ -45,6 +45,7 @@ namespace luib {
          * @param tex_h the height to draw from the starting point
          */
         void texture_part(const sf2d_texture *texture, int x, int y, int tex_x, int tex_y, int tex_w, int tex_h);
+        void texture_part(const sf2d_texture *texture,Rectangle dst, Point texOffset);
 
         /**
          * @brief Draws a single character
