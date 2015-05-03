@@ -99,7 +99,7 @@ namespace luib {
     }
 
 
-    bool Container::getFocusedElement(Element *&currentFocus,TouchEvent & touchEvent)
+    bool Container::findFocusedElement(Element *&currentFocus, TouchEvent &touchEvent)
     {
         for(int child = children.size()-1;child>=0;--child)
         {
@@ -109,13 +109,14 @@ namespace luib {
             relativeSytlusPos.y -= children[child]->_aabb.y;
             TouchEvent dispatchedTouchEvent = touchEvent;
             dispatchedTouchEvent.viewPos = relativeSytlusPos;
-            if (children[child]->_aabb.contains(touchEvent.viewPos) && children[child]->getFocusedElement(currentFocus, dispatchedTouchEvent))
+            if (children[child]->_aabb.contains(touchEvent.viewPos) &&
+                children[child]->findFocusedElement(currentFocus, dispatchedTouchEvent))
             {
                 touchEvent = dispatchedTouchEvent;
                 return true;
             }
         }
-        return Element::getFocusedElement(currentFocus,touchEvent);
+        return Element::findFocusedElement(currentFocus, touchEvent);
     }
 
     void Container::move(int x, int y)

@@ -67,7 +67,7 @@ namespace luib {
     }
 
 
-    bool Element::getFocusedElement(Element *&currentFocus,TouchEvent & touchEvent)
+    bool Element::findFocusedElement(Element *&currentFocus, TouchEvent &touchEvent)
     {
         //todo : fix it
         if(currentFocus == NULL||currentFocus->_depthLevel < _depthLevel)

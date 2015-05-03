@@ -82,13 +82,21 @@ namespace luib {
         virtual void onTouchEvent(const TouchEvent &touchEvent);
         virtual void onFocus(){}
         virtual void onFocusLoss(){}
-        virtual bool getFocusedElement(Element *&currentFocus,TouchEvent & touchEvent);
+
         void bringToFront();
 
         Margin _margin;
         bool _bringToFrontOnFocus = false;
 
     private:
+
+
+        /**
+         * This method has to change currentFocus and touchEvent according to the focused element
+         * Internal usage only.
+         */
+        virtual bool findFocusedElement(Element *&currentFocus, TouchEvent &touchEvent);
+
         Container *_upper = nullptr;
         Container *_root = nullptr;
 

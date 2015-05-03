@@ -62,10 +62,11 @@ namespace luib {
         virtual void onAttach(Element * element);
         virtual void onDetach(Element * element);
         virtual void onTouchEvent(const TouchEvent &touchEvent) override;
-        virtual bool getFocusedElement(Element *&currentFocus,TouchEvent & touchEvent) override;
         void clean();
 
         std::vector<std::shared_ptr<Element>> children;
+    private:
+        virtual bool findFocusedElement(Element *&currentFocus, TouchEvent &touchEvent) override;
     };
 
     template<class T, class ... Args>

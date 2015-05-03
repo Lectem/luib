@@ -109,6 +109,10 @@ namespace luib{
         elementWithFocus = bottomScreenLayout.get();
     }
 
+    /**
+     * This function is in charge of finding the newly focused element if needed, and to dispatch the
+     * TouchEvent to the focused Element.
+     */
     void dispatchTouchEvent(TouchEvent touchEvent)
     {
         switch (touchEvent.type)
@@ -117,7 +121,7 @@ namespace luib{
             {
                 Element *oldElementWithFocus = elementWithFocus;
                 elementWithFocus = bottomScreenLayout.get();
-                if (bottomScreenLayout)bottomScreenLayout->getFocusedElement(elementWithFocus, touchEvent);
+                if (bottomScreenLayout)bottomScreenLayout->findFocusedElement(elementWithFocus, touchEvent);
                 if (oldElementWithFocus != nullptr && oldElementWithFocus != elementWithFocus)
                 {
                     oldElementWithFocus->_hasFocus = false;
