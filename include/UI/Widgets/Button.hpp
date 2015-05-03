@@ -10,8 +10,13 @@ namespace luib {
     {
 
     public:
+        using OnClickListener = std::function<void(Element&)>;
         ~Button(){printf("Button freed\n");}
         Button(int x, int y, int w, int h);
+        void setOnClickListener(OnClickListener onClickListener);
+    protected:
+        virtual void onTouchEvent(const luib::TouchEvent &touchEvent) override;
+        OnClickListener _onClickListener;
     };
     using Button_shared_ptr = std::shared_ptr<Button>;
 

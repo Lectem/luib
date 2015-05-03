@@ -58,25 +58,29 @@ namespace luib{
             if(kDown&KEY_TOUCH)
             {
                 touchEvent.type=TouchEvent::DOWN;
+                dispatchTouchEvent(touchEvent);
             }
             else if (kHeld&KEY_TOUCH)
             {
                 touchEvent.type=TouchEvent::HELD;
+                elementWithFocus->onTouchEvent(touchEvent);
             }
             if(kUp&KEY_TOUCH)
             {
+                printf("touch up\n");
                 touchEvent.type=TouchEvent::UP;
-            }
+                elementWithFocus->onTouchEvent(touchEvent);
+            }//TODO:ADD DRAG EVENT
+            /*
             if(touchEvent.type!=TouchEvent::NONE)
             {
                 dispatchTouchEvent(touchEvent);
-            }
+            }*/
             if(elementWithFocus != nullptr)
             {
                 elementWithFocus->onFocus();
                 elementWithFocus->bringToFront();
             }
-
 
 
             bottomScreenLayout->measure(sizeConstraint{320,sizeConstraint::EXACTLY},
@@ -103,9 +107,11 @@ namespace luib{
         Element* oldElementWithFocus=elementWithFocus;
         touchEvent.rawPos={touch.px,touch.py};
         touchEvent.viewPos= touchEvent.rawPos;
+        elementWithFocus = bottomScreenLayout.get();
         if(bottomScreenLayout)bottomScreenLayout->getFocusedElement(elementWithFocus, touchEvent);
         if(oldElementWithFocus!= nullptr && oldElementWithFocus != elementWithFocus)
         {
+            oldElementWithFocus->_hasFocus=false;
             oldElementWithFocus->onFocusLoss();
         }
     }
