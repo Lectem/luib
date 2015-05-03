@@ -81,7 +81,7 @@ int main(int argc, char **argv)
 
         //luib::UpdateInputs();
         luib::Update();
-        printf("\x1b[0;0H%f\n",sf2d_get_fps());
+        //printf("\x1b[0;0H%f\n",sf2d_get_fps());
         sf2d_end_frame();
         sf2d_swapbuffers();
 

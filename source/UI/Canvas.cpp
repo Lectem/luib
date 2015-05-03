@@ -30,8 +30,12 @@ namespace luib {
         rectangle.x+=_origin.x;
         rectangle.y+=_origin.y;
         rectangle.clip(_frame);
-        sf2d_draw_rectangle(rectangle.x,rectangle.y,
-                            rectangle.w,rectangle.h,color);
+        //Don't issue a draw call if nothing is to be displayed...
+        if(rectangle.w>0 && rectangle.h>0)
+        {
+            sf2d_draw_rectangle(rectangle.x,rectangle.y,
+                                rectangle.w,rectangle.h,color);
+        }
     }
     void Canvas::rectangle(const int x,const int y,const int w,const int h,const u32 color)
     {
@@ -44,7 +48,11 @@ namespace luib {
         dst.x+=_origin.x;
         dst.y+=_origin.y;
         texOffset+=dst.clipAndGetOffset(_frame);
-        sf2d_draw_texture_part(texture,dst.x,dst.y,texOffset.x,texOffset.y,dst.w,dst.h);
+        //Don't issue a draw call if nothing is to be displayed...
+        if(dst.w >0 && dst.h>0)
+        {
+            sf2d_draw_texture_part(texture,dst.x,dst.y,texOffset.x,texOffset.y,dst.w,dst.h);
+        }
     }
     void Canvas::texture_part(const sf2d_texture *texture, int x, int y, int tex_x, int tex_y, int tex_w, int tex_h)
     {

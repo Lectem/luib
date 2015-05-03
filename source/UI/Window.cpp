@@ -24,10 +24,9 @@ namespace luib {
         switch(touchEvent.type)
         {
             case TouchEvent::DOWN:
+                printf("Window: touchEvent DOWN\n");
                 if (titleBarAABB().contains(touchEvent.viewPos))
                 {
-                    lastTouchPosition.px = touch.px;
-                    lastTouchPosition.py = touch.py;
                     isGrabbed = true;
                     printf("Window title bar clicked\n");
                 }
@@ -43,16 +42,15 @@ namespace luib {
                     Container::onTouchEvent(touchEvent);
                 }
                 break;
-            case TouchEvent::HELD:
+            case TouchEvent::MOTION :
                 if(isGrabbed)
                 {
-                    move(touch.px-lastTouchPosition.px,touch.py-lastTouchPosition.py);
-                    lastTouchPosition.px = touch.px;
-                    lastTouchPosition.py = touch.py;
+                    move(touchEvent.deltaPos.x,touchEvent.deltaPos.y);
                 }
                 break;
             case TouchEvent::UP:break;
-            case TouchEvent::NONE:break;
+                isGrabbed = false;
+            default:break;
         }
     }
 
@@ -75,8 +73,8 @@ namespace luib {
 
     void Window::onFocusLoss()
     {
-        printf("Window lost focus\n");
         isGrabbed = false;
+        printf("Window lost focus\n");
     }
 
     void Window::bringToFront(Element *element)
@@ -90,7 +88,7 @@ namespace luib {
     {
         for(auto& childPtr:children)
         {
-            childPtr->layout({0,topBarHeight,getWidth(),getHeight()-topBarHeight});
+            childPtr->layout(Rectangle{0,topBarHeight,getWidth(),getHeight()-topBarHeight});
         }
     }
 }

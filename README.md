@@ -28,3 +28,6 @@ UI is a pain to develop and maintain in C only.
 ##Any plannings for a C API ?
 No. 
 Though if you really want one, you can fork the project and I'll gladly merge it if it's nicely done.
+
+##What about other platforms ?
+In a far future, or maybe for debugging purposes.

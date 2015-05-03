@@ -22,11 +22,13 @@ namespace luib {
 
     void Element::layout(Rectangle const & coordinates)
     {
-        if(coordinates != _aabb || _isLayoutNeeded)
+        //Either forced or different size has been given
+        if(_isLayoutNeeded || coordinates != _aabb)
         {
             _aabb = coordinates;
             onLayout(coordinates);
         }
+        _isLayoutNeeded = false;
     }
 
     int Element::getWidth() const
@@ -64,22 +66,13 @@ namespace luib {
         bgColor^=0xFFFFFF00;
     }
 
-    /**
-     * Should update the size and/or values of the element
-     */
-    void Element::update()
-    {
-    }
 
-
-    bool Element::getFocusedElement(Element *&currentFocus,TouchEvent const & touchEvent)
+    bool Element::getFocusedElement(Element *&currentFocus,TouchEvent & touchEvent)
     {
         //todo : fix it
         if(currentFocus == NULL||currentFocus->_depthLevel < _depthLevel)
         {
-            _hasFocus = true;
             currentFocus = this;
-            onTouchEvent(touchEvent);
             return true;
         }
         return false;
@@ -90,11 +83,13 @@ namespace luib {
     void Element::move(int x, int y)
     {
         if(_upper)_upper->moveChild(this,x,y);
+        requestLayout();
     }
 
     void Element::moveTo(int x, int y)
     {
         if(_upper)_upper->moveChildTo(this,x,y);
+        requestLayout();
     }
 
     void Element::bringToFront()

@@ -32,6 +32,7 @@ namespace luib {
         if (_root != nullptr)element->_root = _root;
         else element->_root = this;
         element->_depthLevel = _depthLevel +1;
+        element->requestLayout();
         children.push_back(element);
         onAttach(element.get());
     }
@@ -45,7 +46,8 @@ namespace luib {
     {
         if(element != nullptr)
         {
-            if(element->_hasFocus)ResetFocus();
+            printf("Container::detach(%p)\n",element);
+            ResetFocus();
             for (auto childPtrIt = children.begin(); childPtrIt != children.end(); ++childPtrIt)
             {
                 if (childPtrIt->get() == element)
@@ -57,6 +59,7 @@ namespace luib {
                 }
             }
         }
+        requestLayout();
     }
 
     void Container::bringToFront(Element *element)
@@ -64,7 +67,7 @@ namespace luib {
         const size_t size=children.size();
         for(size_t i=0;i<size;++i)
         {
-            if(children[i].get() == element)
+            if(children[i].get() == element && i != size)
             {
                 auto childToBringFront = children[i];
                 size_t j;
@@ -96,43 +99,23 @@ namespace luib {
     }
 
 
-    void Container::update()
+    bool Container::getFocusedElement(Element *&currentFocus,TouchEvent & touchEvent)
     {
-        for(auto it = children.begin();it != children.end() ; ++it)
+        for(int child = children.size()-1;child>=0;--child)
         {
-            if(it->use_count() == 0)
-            {
-                it = children.erase(it);
-            }
-            else (*it)->update();
-        }
-    }
 
-    bool Container::getFocusedElement(Element *&currentFocus,TouchEvent const & touchEvent)
-    {
-        bool newFocus = false;
-        for(int child = children.size()-1;child>=0 && !newFocus;--child)
-        {
-            if(children[child].get() == nullptr)
+            Point relativeSytlusPos = touchEvent.viewPos;
+            relativeSytlusPos.x -= children[child]->_aabb.x;
+            relativeSytlusPos.y -= children[child]->_aabb.y;
+            TouchEvent dispatchedTouchEvent = touchEvent;
+            dispatchedTouchEvent.viewPos = relativeSytlusPos;
+            if (children[child]->_aabb.contains(touchEvent.viewPos) && children[child]->getFocusedElement(currentFocus, dispatchedTouchEvent))
             {
-                printf("%d.........................\n",child);
-            }
-            else
-            {
-                Point relativeSytlusPos = touchEvent.viewPos;
-                relativeSytlusPos.x -= children[child]->_aabb.x;
-                relativeSytlusPos.y -= children[child]->_aabb.y;
-                Rectangle childAABB = children[child]->_aabb;
-                TouchEvent dispatchedTouchEvent = touchEvent;
-                dispatchedTouchEvent.viewPos=relativeSytlusPos;
-                if (children[child]->_aabb.contains(touchEvent.viewPos))
-                {
-                    newFocus = children[child]->getFocusedElement(currentFocus, dispatchedTouchEvent);
-                }
+                touchEvent = dispatchedTouchEvent;
+                return true;
             }
         }
-        newFocus|=Element::getFocusedElement(currentFocus,touchEvent);
-        return newFocus;
+        return Element::getFocusedElement(currentFocus,touchEvent);
     }
 
     void Container::move(int x, int y)
@@ -168,6 +151,7 @@ namespace luib {
             child->_aabb.y=0;
         else
             child->_aabb.y+=y;
+        child->requestLayout();
     }
 
     void Container::moveChildTo(Element * child,int x, int y)

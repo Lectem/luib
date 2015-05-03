@@ -13,7 +13,6 @@ namespace luib {
         Rectangle closeButtonAABB() const;
         Rectangle titleBarAABB() const;
         bool isGrabbed = false;
-        touchPosition lastTouchPosition;
 
     public:
         Window(int x, int y, int w, int h, u32 bgColor = RGBA8(0xFF,0xFF,0xFF,0xFF));

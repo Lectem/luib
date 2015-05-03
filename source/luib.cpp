@@ -2,6 +2,7 @@
 // Created by Lectem on 14/04/2015.
 //
 #include <3ds.h>
+#include <3ds/services/hid.h>
 #include "UI/Layouts/RelativeLayout.hpp"
 #include "luib.hpp"
 
@@ -19,6 +20,7 @@ namespace luib{
     Element* elementWithFocus = nullptr;
     Canvas topCanvas;
     Canvas bottomCanvas;
+    TouchEvent touchEvent;
 
     void dispatchTouchEvent(TouchEvent touchEvent);
 
@@ -42,9 +44,38 @@ namespace luib{
     {
         hidScanInput();
         hidTouchRead(&touch);
-        kDown=keysDown();
-        kUp=keysUp();
-        kHeld=keysHeld();
+        kDown = keysDown();
+        kUp = keysUp();
+        kHeld = keysHeld();
+        static int heldDuration = 0;
+        static touchPosition oldPos = touch;
+
+        touchEvent.type = TouchEvent::NONE;
+        if (kDown & KEY_TOUCH)
+        {
+            heldDuration++;
+            touchEvent.type = TouchEvent::DOWN;
+            touchEvent.rawPos = {touch.px, touch.py};
+            touchEvent.viewPos = touchEvent.rawPos;
+            oldPos=touch;
+        }
+        else if (kHeld & KEY_TOUCH)
+        {
+            heldDuration++;
+            touchEvent.type = TouchEvent::HELD;
+            if(heldDuration && oldPos.px != touch.px && oldPos.py != touch.py)
+            {
+                touchEvent.type = TouchEvent::MOTION;
+                touchEvent.deltaPos.x=touch.px - oldPos.px;
+                touchEvent.deltaPos.y=touch.py - oldPos.py;
+            }
+            oldPos=touch;
+        }
+        if (kUp & KEY_TOUCH)
+        {
+            heldDuration=0;
+            touchEvent.type = TouchEvent::UP;
+        }
     }
 
     void Update()
@@ -52,50 +83,26 @@ namespace luib{
         UpdateInputs();
         if(bottomScreenLayout)
         {
-            TouchEvent touchEvent;
-
-            bottomScreenLayout->update();
-            if(kDown&KEY_TOUCH)
-            {
-                touchEvent.type=TouchEvent::DOWN;
-                dispatchTouchEvent(touchEvent);
-            }
-            else if (kHeld&KEY_TOUCH)
-            {
-                touchEvent.type=TouchEvent::HELD;
-                elementWithFocus->onTouchEvent(touchEvent);
-            }
-            if(kUp&KEY_TOUCH)
-            {
-                printf("touch up\n");
-                touchEvent.type=TouchEvent::UP;
-                elementWithFocus->onTouchEvent(touchEvent);
-            }//TODO:ADD DRAG EVENT
-            /*
-            if(touchEvent.type!=TouchEvent::NONE)
-            {
-                dispatchTouchEvent(touchEvent);
-            }*/
-            if(elementWithFocus != nullptr)
-            {
-                elementWithFocus->onFocus();
-                elementWithFocus->bringToFront();
-            }
-
-
+            dispatchTouchEvent(touchEvent);
             bottomScreenLayout->measure(sizeConstraint{320,sizeConstraint::EXACTLY},
                                         sizeConstraint{240,sizeConstraint::EXACTLY});
             bottomScreenLayout->layout(Rectangle{0,0,320,240});
             bottomScreenLayout->draw(bottomCanvas);
         }
-        //TODO
-        //topScreenLayout.draw(topCanvas);
+        if(topScreenLayout)
+        {
+            topScreenLayout->measure(sizeConstraint{400, sizeConstraint::EXACTLY},
+                                     sizeConstraint{240, sizeConstraint::EXACTLY});
+            topScreenLayout->layout(Rectangle{0, 0, 400, 240});
+            topScreenLayout->draw(topCanvas);
+        }
     }
 
     void ResetFocus()
     {
         if(elementWithFocus != nullptr)
         {
+            printf("elementWithFocus %p parent %p",elementWithFocus,elementWithFocus->_upper);
             elementWithFocus->_hasFocus = false;
             elementWithFocus->onFocusLoss();
         }
@@ -104,15 +111,33 @@ namespace luib{
 
     void dispatchTouchEvent(TouchEvent touchEvent)
     {
-        Element* oldElementWithFocus=elementWithFocus;
-        touchEvent.rawPos={touch.px,touch.py};
-        touchEvent.viewPos= touchEvent.rawPos;
-        elementWithFocus = bottomScreenLayout.get();
-        if(bottomScreenLayout)bottomScreenLayout->getFocusedElement(elementWithFocus, touchEvent);
-        if(oldElementWithFocus!= nullptr && oldElementWithFocus != elementWithFocus)
+        switch (touchEvent.type)
         {
-            oldElementWithFocus->_hasFocus=false;
-            oldElementWithFocus->onFocusLoss();
+            case TouchEvent::DOWN :
+            {
+                Element *oldElementWithFocus = elementWithFocus;
+                elementWithFocus = bottomScreenLayout.get();
+                if (bottomScreenLayout)bottomScreenLayout->getFocusedElement(elementWithFocus, touchEvent);
+                if (oldElementWithFocus != nullptr && oldElementWithFocus != elementWithFocus)
+                {
+                    oldElementWithFocus->_hasFocus = false;
+                    oldElementWithFocus->onFocusLoss();
+                    elementWithFocus->_hasFocus=true;
+                    elementWithFocus->onFocus();
+                }
+                elementWithFocus->onTouchEvent(touchEvent);
+            }
+                break;
+            case TouchEvent::MOTION :
+            case TouchEvent::HELD :
+            case TouchEvent::UP :
+                elementWithFocus->onTouchEvent(touchEvent);
+                break;
+            case TouchEvent::NONE :break;
+        }
+        if(elementWithFocus != nullptr)
+        {
+            elementWithFocus->bringToFront();
         }
     }
 }

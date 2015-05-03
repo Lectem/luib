@@ -11,19 +11,25 @@
 
 namespace luib {
 
+    class LayoutParams{
+        enum :int{WRAP_CONTENT=-2, MATCH_PARENT=-1};
+        int width;
+        int height;
+    };
 
     class Container;
     class Element
     {
-    enum VISIBILITY{
-        VISIBLE,    //!<default, the view will be visible and drawn
-        INVISIBLE,  //!<The view will take the same space as if it was visible, but will not be drawn
-        GONE        //!<The container will consider that this element takes no space and won't draw it
-    };
+        enum VISIBILITY{
+            VISIBLE,    //!<default, the view will be visible and drawn
+            INVISIBLE,  //!<The view will take the same space as if it was visible, but will not be drawn
+            GONE        //!<The container will consider that this element takes no space and won't draw it
+        };
+
         friend class Container;
-        friend void ::luib::Update();
-        friend void ::luib::ResetFocus();
-        friend void ::luib::dispatchTouchEvent(TouchEvent touchEvent);
+        friend void Update();
+        friend void ResetFocus();
+        friend void dispatchTouchEvent(TouchEvent touchEvent);
     public:
         Element(){}
         Element(int x =0,int y=0,int w = 1,int h = 1,u32 bgColor = 0):
@@ -52,7 +58,7 @@ namespace luib {
 
         //Do not overload/ride. Override onDraw instead
         void draw(Canvas &canvas) const;
-        virtual void update();
+
         virtual bool isTouched();
         virtual void move(int x,int y);
         virtual void moveTo(int x,int y);
@@ -69,14 +75,14 @@ namespace luib {
         void drawBG(Canvas &canvas) const;
 
         virtual void onMeasure(sizeConstraint width, sizeConstraint height);
-        virtual void onLayout(Rectangle const &coordinates){};
+        virtual void onLayout(Rectangle const &coordinates){}
         virtual void onDraw(Canvas &canvas) const{};
         virtual void onDrawScrollBars(Canvas &canvas) const{};
         virtual void onSizeChanged(){};
         virtual void onTouchEvent(const TouchEvent &touchEvent);
         virtual void onFocus(){}
         virtual void onFocusLoss(){}
-        virtual bool getFocusedElement(Element *&currentFocus,TouchEvent const & touchEvent);
+        virtual bool getFocusedElement(Element *&currentFocus,TouchEvent & touchEvent);
         void bringToFront();
 
         Margin _margin;

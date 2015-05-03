@@ -16,8 +16,8 @@ namespace luib {
     class Container : public Element
     {
         friend class Element;
-        friend void ::luib::Update();
-        friend void ::luib::dispatchTouchEvent(TouchEvent touchEvent);
+        friend void Update();
+        friend void dispatchTouchEvent(TouchEvent touchEvent);
     public:
         Container(int x = 0, int y = 0, int w = 0, int h = 0,u32 bgColor = 0);
 
@@ -45,7 +45,6 @@ namespace luib {
 
 
         virtual void bringToFront(Element * element);
-        virtual void update() override;
 
 
         virtual void move(int x, int y) override;
@@ -63,7 +62,7 @@ namespace luib {
         virtual void onAttach(Element * element);
         virtual void onDetach(Element * element);
         virtual void onTouchEvent(const TouchEvent &touchEvent) override;
-        virtual bool getFocusedElement(Element *&currentFocus,TouchEvent const & touchEvent) override;
+        virtual bool getFocusedElement(Element *&currentFocus,TouchEvent & touchEvent) override;
         void clean();
 
         std::vector<std::shared_ptr<Element>> children;

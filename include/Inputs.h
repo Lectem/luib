@@ -12,11 +12,12 @@ namespace luib {
     {
         enum Type
         {
-            DOWN, HELD, UP, NONE
+            NONE,DOWN, HELD, UP, MOTION
         };
         Type type = NONE;
         Point rawPos;
         Point viewPos;
+        Point deltaPos;
     };
 
 }
