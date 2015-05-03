@@ -18,7 +18,7 @@ namespace luib {
         virtual void onTouchEvent(const luib::TouchEvent &touchEvent) override;
         OnClickListener _onClickListener;
     };
-    using Button_shared_ptr = std::shared_ptr<Button>;
+        using Button_shared_ptr = std::shared_ptr<Button>;
 
 }
 

@@ -36,21 +36,17 @@ int main(int argc, char **argv)
         clearButton->bgColor = 0xFF0000FF;
 
         auto button = luib::make_elem<luib::Button>(0, 230, 10, 10);
-        button->setOnClickListener([](luib::Element&)
-                                   {
-                                       auto newWindow = luib::bottomScreenLayout->add<luib::Window>(rand() % 300,
-                                                                                                    rand() % 220,
-                                                                                                    rand() % 100 + 8,
-                                                                                                    rand() % 200 + 8,
-                                                                                                    RGBA8(rand() & 0xFF,
-                                                                                                          rand() & 0xFF,
-                                                                                                          rand() & 0xFF,
-                                                                                                          rand() &
-                                                                                                          0xFF));
-                                       newWindow->add<luib::Text>(2, 2, 250, 250,
-                                                                  "This is a test window with text.");
-
-                                   });
+        button->setOnClickListener(
+                [](luib::Element&)
+               {
+                   auto newWindow =
+                           luib::bottomScreenLayout->add<luib::Window>(
+                                   rand() % 300, rand() % 220,
+                                   rand() % 100 + 8, rand() % 200 + 8,
+                                   RGBA8(rand() & 0xFF, rand() & 0xFF, rand() & 0xFF, rand() & 0xFF));
+                   newWindow->add<luib::Text>(2, 2, 250, 250,
+                                              "This is a test window with text.");
+               });
         button->bgColor = 0xFFFF00FF;
         luib::bottomScreenLayout->attach(button);
         printf("Detaching button...\n");
