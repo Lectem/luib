@@ -47,7 +47,7 @@ namespace luib{
         kDown = keysDown();
         kUp = keysUp();
         kHeld = keysHeld();
-        static int heldDuration = 0;
+        static unsigned long int heldDuration = 0;
         static touchPosition oldPos = touch;
 
         touchEvent.type = TouchEvent::NONE;
@@ -63,7 +63,7 @@ namespace luib{
         {
             heldDuration++;
             touchEvent.type = TouchEvent::HELD;
-            if(heldDuration && oldPos.px != touch.px && oldPos.py != touch.py)
+            if(heldDuration>0 && (oldPos.px != touch.px || oldPos.py != touch.py))
             {
                 touchEvent.type = TouchEvent::MOTION;
                 touchEvent.deltaPos.x=touch.px - oldPos.px;
@@ -133,6 +133,7 @@ namespace luib{
             }
                 break;
             case TouchEvent::MOTION :
+                printf("MOTION %d %d\n",touchEvent.deltaPos.x,touchEvent.deltaPos.y);
             case TouchEvent::HELD :
             case TouchEvent::UP :
                 elementWithFocus->onTouchEvent(touchEvent);
