@@ -33,7 +33,7 @@ namespace luib {
         else element->_root = this;
         element->_depthLevel = _depthLevel +1;
         element->requestLayout();
-        children.push_back(element);
+        _children.push_back(element);
         onAttach(element.get());
     }
 
@@ -47,13 +47,13 @@ namespace luib {
         if(element != nullptr)
         {
             ResetFocus();
-            for (auto childPtrIt = children.begin(); childPtrIt != children.end(); ++childPtrIt)
+            for (auto childPtrIt = _children.begin(); childPtrIt != _children.end(); ++childPtrIt)
             {
                 if (childPtrIt->get() == element)
                 {
                     (*childPtrIt)->_upper = nullptr;
                     onDetach(childPtrIt->get());
-                    children.erase(childPtrIt);
+                    _children.erase(childPtrIt);
                     return;
                 }
             }
@@ -63,18 +63,18 @@ namespace luib {
 
     void Container::bringToFront(Element *element)
     {
-        const size_t size=children.size();
+        const size_t size= _children.size();
         for(size_t i=0;i<size;++i)
         {
-            if(children[i].get() == element && i != size)
+            if(_children[i].get() == element && i != size)
             {
-                auto childToBringFront = children[i];
+                auto childToBringFront = _children[i];
                 size_t j;
                 for(j = i; j+1 < size; ++j)
                 {
-                    children[j]=std::move(children[j+1]);
+                    _children[j]=std::move(_children[j+1]);
                 }
-                children[j] = childToBringFront;
+                _children[j] = childToBringFront;
                 break;
             }
         }
@@ -89,7 +89,7 @@ namespace luib {
         //printf("frame : %d %d %d %d \n",oldCanvas.getFrame().x,oldCanvas.getFrame().y, oldCanvas.getFrame().w,oldCanvas.getFrame().h);
         //printf("_aabb : %d %d %d %d\n",_aabb.x,_aabb.y,_aabb.w,_aabb.h);
         Element::onDraw(canvas);
-        for(auto it =children.cbegin();it!=children.cend();++it)
+        for(auto it = _children.cbegin();it!= _children.cend();++it)
         {
             Element_shared_ptr child = *it;
             //Make a copy of the child aabb
@@ -118,16 +118,16 @@ namespace luib {
 
     bool Container::findFocusedElement(Element *&currentFocus, TouchEvent &touchEvent)
     {
-        for(int child = children.size()-1;child>=0;--child)
+        for(int child = _children.size()-1;child>=0;--child)
         {
 
             Point relativeSytlusPos = touchEvent.viewPos;
-            relativeSytlusPos.x -= children[child]->_aabb.x;
-            relativeSytlusPos.y -= children[child]->_aabb.y;
+            relativeSytlusPos.x -= _children[child]->_aabb.x;
+            relativeSytlusPos.y -= _children[child]->_aabb.y;
             TouchEvent dispatchedTouchEvent = touchEvent;
             dispatchedTouchEvent.viewPos = relativeSytlusPos;
-            if (children[child]->_aabb.contains(touchEvent.viewPos) &&
-                children[child]->findFocusedElement(currentFocus, dispatchedTouchEvent))
+            if (_children[child]->_aabb.contains(touchEvent.viewPos) &&
+                _children[child]->findFocusedElement(currentFocus, dispatchedTouchEvent))
             {
                 touchEvent = dispatchedTouchEvent;
                 return true;
@@ -139,7 +139,7 @@ namespace luib {
     void Container::move(int x, int y)
     {
         Element::move(x, y);
-        for(Element_shared_ptr e:children)
+        for(Element_shared_ptr e:_children)
         {
             moveChild(e.get(),x,y);
         }
@@ -181,7 +181,7 @@ namespace luib {
 
     void Container::clean()
     {
-        children.clear();
+        _children.clear();
     }
 
     void Container::onAttach(Element *element)
@@ -191,7 +191,7 @@ namespace luib {
 
     void Container::onLayout(Rectangle const &coordinates)
     {
-        for(auto& childPtr:children)
+        for(auto& childPtr:_children)
         {
             //TODO finish and correct this
             childPtr->layout({0,0,getWidth(),getHeight()});
@@ -219,7 +219,7 @@ namespace luib {
 
     void Container::measureChildren(sizeConstraint width, sizeConstraint height)
     {
-        for(auto &childPtr  : children)
+        for(auto &childPtr  : _children)
         {
             if(childPtr->_visibility != GONE)
             {
@@ -228,8 +228,77 @@ namespace luib {
         }
     }
 
+
+    sizeConstraint Container::getChildSizeContraint(sizeConstraint constraint,int padding,int childParam)
+    {
+
+        int size = std::max(0,constraint.value-padding);
+        sizeConstraint result(size,sizeConstraint::NOT_SPECIFIED);
+        switch (constraint.type)
+        {
+            //Our size is limited
+            case sizeConstraint::AT_MOST:
+                //The child wants to be of our size, but we don't have it yet
+                //So we'll just make sure it won't be bigger than us
+                if(childParam == LayoutParams::MATCH_PARENT)
+                {
+                    result.type = sizeConstraint::AT_MOST;
+                }
+                //Child will determine its own size, but musn't be bigger the us
+                else if(childParam == LayoutParams::WRAP_CONTENT)
+                {
+                    result.type = sizeConstraint::AT_MOST;
+                }
+                //The child asked for a size, so... whatever
+                else
+                {
+                    result.value = childParam;
+                    result.type = sizeConstraint::NOT_SPECIFIED;
+                }
+                break;
+            //We know our size
+            case sizeConstraint::EXACTLY:
+                if(childParam == LayoutParams::WRAP_CONTENT)
+                {
+                    result.type=sizeConstraint::AT_MOST;
+                }
+                else
+                {
+                    result.type=sizeConstraint::EXACTLY;
+                }
+                break;
+            // No limits !
+            case sizeConstraint::NOT_SPECIFIED:
+                //The child wants a specific size, just give him
+                if(childParam >=0)
+                {
+                    result.value = childParam;
+                    result.type = sizeConstraint::EXACTLY;
+                }
+                //Otherwise just let him choose it
+                else
+                {
+                    result.value=0;
+                    result.type=sizeConstraint::NOT_SPECIFIED;
+                }
+                break;
+        }
+        return result;
+    }
+
     void Container::measureChild(Element_shared_ptr child, sizeConstraint width, sizeConstraint height)
     {
-        //TODO
+        LayoutParams childLayoutParams = child->getLayoutParams();
+        if(childLayoutParams.width == LayoutParams::DEFAULT)
+        {
+            childLayoutParams.width = getDefaultLayoutParams();
+        }
+        if(childLayoutParams.height == LayoutParams::DEFAULT)
+        {
+            childLayoutParams.height = getDefaultLayoutParams();
+        }
+        width = getChildSizeContraint(width,_padding.left+_padding.right,childLayoutParams.width);
+        height = getChildSizeContraint(height,_padding.top+_padding.bot,childLayoutParams.height);
+        child->measure(width,height);
     }
 }

@@ -92,16 +92,34 @@ namespace luib {
         Rectangle const & getChildAABB(Element* child) const;
 
         /**
-         * Ask all children to measure themselves.
+         * Ask all _children to measure themselves.
          * Children that are with the visibility GONE are ignored
          */
         void measureChildren(sizeConstraint width, sizeConstraint height);
 
         /**
-         * Ask a child to measure itself taking into account the padding and
-         * the sizeConstraint of this Container
+         * Ask a child to measure itself taking into account the padding
+         * and the sizeConstraint of this Container
          */
         void measureChild(Element_shared_ptr child,sizeConstraint width, sizeConstraint height);
+
+        /**
+         * Default layout parameter for children
+         */
+        int getDefaultLayoutParams(){
+            return LayoutParams::WRAP_CONTENT;
+        }
+
+        /**
+         * The most difficult part of the measuring step, it helps to choose
+         * what constraints will be given to _children based on their LayoutParam.
+         * @param constraint The constraint of a dimension (width|height) for this Container
+         * @padding The total padding of this dimension
+         * @childParams The parameters of the child
+         * @return The constraint to be given to the child
+         */
+        sizeConstraint getChildSizeContraint(sizeConstraint constraint,int padding,int childParam);
+
 
         virtual void onLayout(Rectangle const &coordinates) override;
         virtual void onDraw(Canvas &canvas) const override;
@@ -110,7 +128,8 @@ namespace luib {
         virtual void onTouchEvent(const TouchEvent &touchEvent) override;
         void clean();
 
-        std::vector<std::shared_ptr<Element>> children;
+        std::vector<std::shared_ptr<Element>> _children;
+        Padding _padding;
     private:
         virtual bool findFocusedElement(Element *&currentFocus, TouchEvent &touchEvent) override;
     };

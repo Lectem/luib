@@ -14,7 +14,7 @@ namespace luib {
         setMeasuredSize(width.value,height.value);
         width.type=sizeConstraint::AT_MOST;
         height.type=sizeConstraint::AT_MOST;
-        for(auto &childPtr :children)
+        for(auto &childPtr :_children)
         {
             childPtr->measure(width,height);
         }
@@ -23,7 +23,7 @@ namespace luib {
 
     void RelativeLayout::onLayout(Rectangle const &coordinates)
     {
-        for(auto &childPtr :children)
+        for(auto &childPtr :_children)
         {
             childPtr->layout(getChildAABB(childPtr.get()));
         }

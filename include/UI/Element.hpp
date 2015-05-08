@@ -11,8 +11,9 @@
 
 namespace luib {
 
-    class LayoutParams{
-        enum :int{WRAP_CONTENT=-2, MATCH_PARENT=-1};
+    struct LayoutParams{
+        enum :int{DEFAULT=-3,WRAP_CONTENT=-2, MATCH_PARENT=-1};
+        LayoutParams(int width=DEFAULT, int height=DEFAULT) : width(width), height(height) { }
         int width;
         int height;
     };
@@ -83,10 +84,14 @@ namespace luib {
         virtual void onFocus(){}
         virtual void onFocusLoss(){}
 
+        const LayoutParams getLayoutParams() const { return _layoutParams; }
+        int defaultSize(int size,sizeConstraint constraint);
+
         void bringToFront();
 
         Margin _margin;
         bool _bringToFrontOnFocus = false;
+
 
     private:
 
@@ -113,6 +118,8 @@ namespace luib {
         bool _hasFocus = false;
         gfxScreen_t _screen;
         VISIBILITY _visibility;
+        LayoutParams _layoutParams;
+
     };
 
     using Element_shared_ptr = std::shared_ptr<Element>;

@@ -50,11 +50,11 @@ namespace luib {
         }
     }
 
-
     void Element::drawBG(Canvas &canvas) const
     {
         canvas.rectangle(0,0,getWidth(),getHeight(),bgColor);
     }
+
 
     bool Element::isTouched()
     {
@@ -65,7 +65,6 @@ namespace luib {
     {
         bgColor^=0xFFFFFF00;
     }
-
 
     bool Element::findFocusedElement(Element *&currentFocus, TouchEvent &touchEvent)
     {
@@ -79,12 +78,13 @@ namespace luib {
     }
 
 
-
     void Element::move(int x, int y)
     {
         if(_upper)_upper->moveChild(this,x,y);
         requestLayout();
     }
+
+
 
     void Element::moveTo(int x, int y)
     {
@@ -100,9 +100,11 @@ namespace luib {
         }
     }
 
+    static const int minSize = 5;
+
     void Element::onMeasure(sizeConstraint width, sizeConstraint height)
     {
-        setMeasuredSize(width.value,height.value);
+        setMeasuredSize(defaultSize(minSize,width),defaultSize(minSize,height));
     }
 
 
@@ -140,6 +142,19 @@ namespace luib {
     void Element::setBgColor(u32 bgColor)
     {
         Element::bgColor = bgColor;
+    }
+
+    int Element::defaultSize(int size, sizeConstraint constraint)
+    {
+        switch (constraint.type)
+        {
+            case sizeConstraint::AT_MOST:
+            case sizeConstraint::EXACTLY:
+                return size;
+            case sizeConstraint::NOT_SPECIFIED:
+                return constraint.value;
+        }
+        return size;
     }
 
 }

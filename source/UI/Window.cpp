@@ -86,7 +86,7 @@ namespace luib {
 
     void Window::onLayout(Rectangle const &coordinates)
     {
-        for(auto& childPtr:children)
+        for(auto& childPtr:_children)
         {
             childPtr->layout(Rectangle{0,topBarHeight,getWidth(),getHeight()-topBarHeight});
         }
