@@ -216,4 +216,20 @@ namespace luib {
     {
 
     }
+
+    void Container::measureChildren(sizeConstraint width, sizeConstraint height)
+    {
+        for(auto &childPtr  : children)
+        {
+            if(childPtr->_visibility != GONE)
+            {
+                measureChild(childPtr,width,height);
+            }
+        }
+    }
+
+    void Container::measureChild(Element_shared_ptr child, sizeConstraint width, sizeConstraint height)
+    {
+        //TODO
+    }
 }

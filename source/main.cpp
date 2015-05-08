@@ -29,10 +29,10 @@ int main(int argc, char **argv)
 
         luib::bottomScreenLayout->bgColor = RGBA8(0x55,0x55,0x55,0xFFF);
 
-        scrollLayout= luib::bottomScreenLayout->add<luib::ScrollLayout>(100,20,150,150,0);
+        scrollLayout= luib::bottomScreenLayout->add<luib::ScrollLayout>(100,20,150,150,RGBA8(0xD5,0x5D,0x42,0xff));
         luib::Text_shared_ptr someText =
                 //luib::bottomScreenLayout->
-                        scrollLayout->add<luib::Text>(0, 0, 150, 150,
+                        scrollLayout->add<luib::Text>(10, 30, 45, 50,
                                                           "abcdefghijklmnopqrstuvxyz\n0123456789");
         someText->bgColor = 0xAA0000FF;
 
