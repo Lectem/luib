@@ -25,6 +25,10 @@ namespace luib {
         //Either forced or different size has been given
         if(_isLayoutNeeded || coordinates != _aabb)
         {
+            if(_aabb.w != coordinates.w || _aabb.h != coordinates.h)
+            {
+                onSizeChanged();
+            }
             _aabb = coordinates;
             onLayout(coordinates);
         }
