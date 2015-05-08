@@ -22,6 +22,19 @@ namespace luib {
                 : x(x), y(y) { }
         Point & operator += (Point const & rp);
         Point & operator -= (Point const & rp);
+        friend Point operator+(Point const & lp,Point const & rp)
+        {
+            return Point(lp.x+rp.x,lp.y+rp.y);
+        }
+        friend Point operator-(Point const & lp,Point const & rp)
+        {
+            return Point(lp.x-rp.x,lp.y-rp.y);
+        }
+        friend Point operator-(Point const & lp)
+        {
+            return Point(-lp.x,-lp.y);
+        }
+
     };
 
     using Size = Point;
@@ -48,11 +61,33 @@ namespace luib {
         void clip(Rectangle const & clipArea);
         Point clipAndGetOffset(Rectangle const & clipArea);
 
-        friend Rectangle operator+(const Rectangle &r,const Point p)
+        Rectangle & operator+=(const Point &p)
+        {
+            x+=p.x;
+            y+=p.y;
+            return *this;
+        }
+
+        friend Rectangle operator+(const Rectangle &r,const Point &p)
         {
             Rectangle res = r;
             res.x+=p.x;
             res.y+=p.y;
+            return res;
+        }
+
+        Rectangle & operator-=(const Point &p)
+        {
+            x-=p.x;
+            y-=p.y;
+            return *this;
+        }
+
+        friend Rectangle operator-(const Rectangle &r,const Point &p)
+        {
+            Rectangle res = r;
+            res.x-=p.x;
+            res.y-=p.y;
             return res;
         }
 

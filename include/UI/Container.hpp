@@ -56,7 +56,8 @@ namespace luib {
 
     protected:
         void setChildAABB(Element* child,Rectangle const & aabb);
-        Rectangle const & getChildAABB(Element* child);
+        Rectangle       & getChildAABB(Element* child) ;
+        Rectangle const & getChildAABB(Element* child) const;
         virtual void onLayout(Rectangle const &coordinates) override;
         virtual void onDraw(Canvas &canvas) const override;
         virtual void onAttach(Element * element);

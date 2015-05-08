@@ -18,6 +18,7 @@ namespace luib {
         Point rawPos;
         Point viewPos;
         Point deltaPos;
+        unsigned long int heldDuration = 0;
     };
 
 }

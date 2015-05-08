@@ -6,6 +6,7 @@
 #include <UI/Widgets/Button.hpp>
 #include <UI/Layouts/RelativeLayout.hpp>
 #include <stdlib.h>
+#include "UI/Layouts/ScrollLayout.h"
 #include "UI/Layouts/LinearLayout.hpp"
 #include "luib.hpp"
 
@@ -22,12 +23,16 @@ int main(int argc, char **argv)
 
     printf("\nHello World!");
     printf("Press Start to exit.\n");
-
+    luib::ScrollLayout_shared_ptr scrollLayout;
     if (luib::bottomScreenLayout)
     {
+
         luib::bottomScreenLayout->bgColor = RGBA8(0x55,0x55,0x55,0xFFF);
+
+        scrollLayout= luib::bottomScreenLayout->add<luib::ScrollLayout>(100,20,150,150,0);
         luib::Text_shared_ptr someText =
-                luib::bottomScreenLayout->add<luib::Text>(100, 20, 150, 150,
+                //luib::bottomScreenLayout->
+                        scrollLayout->add<luib::Text>(0, 0, 150, 150,
                                                           "abcdefghijklmnopqrstuvxyz\n0123456789");
         someText->bgColor = 0xAA0000FF;
 
@@ -76,6 +81,7 @@ int main(int argc, char **argv)
         if (luib::kDown & KEY_START) break; // break in order to return to hbmenu
 
         // Flush and swap framebuffers
+        scrollLayout->setScrollPos({0,-frame%scrollLayout->getHeight()});
 
         sf2d_start_frame(GFX_BOTTOM, GFX_LEFT);
 

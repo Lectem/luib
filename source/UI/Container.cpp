@@ -46,7 +46,6 @@ namespace luib {
     {
         if(element != nullptr)
         {
-            printf("Container::detach(%p)\n",element);
             ResetFocus();
             for (auto childPtrIt = children.begin(); childPtrIt != children.end(); ++childPtrIt)
             {
@@ -82,15 +81,33 @@ namespace luib {
     }
     void Container::onDraw(Canvas &canvas) const
     {
-        Point oldOrigin = canvas.getOrigin();
+        //FIXME:probably wrong
+
+        Canvas oldCanvas = canvas;
+        const Point &oldOrigin = oldCanvas.getOrigin();
+        //printf("old canvas origin : %d %d\n",oldOrigin.x,oldOrigin.y);
+        //printf("frame : %d %d %d %d \n",oldCanvas.getFrame().x,oldCanvas.getFrame().y, oldCanvas.getFrame().w,oldCanvas.getFrame().h);
+        //printf("_aabb : %d %d %d %d\n",_aabb.x,_aabb.y,_aabb.w,_aabb.h);
         Element::onDraw(canvas);
         for(auto it =children.cbegin();it!=children.cend();++it)
         {
             Element_shared_ptr child = *it;
-            canvas.setFrameAndOrigin(child->_aabb+oldOrigin);
+            //Make a copy of the child aabb
+            Rectangle childAABB = child->_aabb+oldOrigin;
+            canvas.setOrigin(childAABB.x,childAABB.y);
+            Rectangle clipArea =oldCanvas.getFrame();// {oldOrigin.x,oldOrigin.y,getWidth(),getHeight()};
+            //printf("|*Before clip %d %d %d %d\n",childAABB.x,childAABB.y,childAABB.w,childAABB.h);
+            //printf("|*clip  with  %d %d %d %d\n",clipArea.x,clipArea.y,clipArea.w,clipArea.h);
+            childAABB.clip(clipArea);
+            //printf("|*after clip  %d %d %d %d\n",childAABB.x,childAABB.y,childAABB.w,childAABB.h);
+            canvas.setFrame(childAABB);
+            //printf("|-drawing element at %d %d\n",canvas.getOrigin().x,canvas.getOrigin().y);
+            //printf("|-frame :     %d %d %d %d\n",canvas.getFrame().x,canvas.getFrame().y,canvas.getFrame().w,canvas.getFrame().h);
             if((*it).use_count())(*it)->draw(canvas);
-        }
-        canvas.setFrameAndOrigin({oldOrigin.x,oldOrigin.y,getWidth(),getHeight()});    }
+        };
+        canvas.setFrameAndOrigin({oldOrigin.x,oldOrigin.y,getWidth(),getHeight()});
+        canvas = oldCanvas;
+    }
 
 
     void Container::onTouchEvent(const TouchEvent &touchEvent)
@@ -177,7 +194,7 @@ namespace luib {
         for(auto& childPtr:children)
         {
             //TODO finish and correct this
-            childPtr->layout(coordinates);
+            childPtr->layout({0,0,getWidth(),getHeight()});
         }
     }
 
@@ -186,7 +203,11 @@ namespace luib {
         child->_aabb=aabb;
     }
 
-    Rectangle const &Container::getChildAABB(Element *child)
+    Rectangle &Container::getChildAABB(Element *child)
+    {
+        return child->_aabb;
+    }
+    Rectangle const &Container::getChildAABB(Element *child) const
     {
         return child->_aabb;
     }

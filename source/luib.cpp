@@ -27,7 +27,7 @@ namespace luib{
     void Init()
     {
         topScreenLayout= make_elem<RelativeLayout>(0,0,400,240);
-        bottomScreenLayout= make_elem<RelativeLayout>(0,0,320,240);
+        bottomScreenLayout= make_elem<RelativeLayout>(0,0,150,240);
         elementWithFocus = bottomScreenLayout.get();
         font = sf2d_create_texture(8,1024,GPU_RGBA8,SF2D_PLACE_RAM);
         sf2d_fill_texture_from_RGBA8(font, fontData.pixel_data, fontData.width, fontData.height);
@@ -47,13 +47,12 @@ namespace luib{
         kDown = keysDown();
         kUp = keysUp();
         kHeld = keysHeld();
-        static unsigned long int heldDuration = 0;
-        static touchPosition oldPos = touch;
 
+        static touchPosition oldPos = touch;
         touchEvent.type = TouchEvent::NONE;
         if (kDown & KEY_TOUCH)
         {
-            heldDuration++;
+            touchEvent.heldDuration++;
             touchEvent.type = TouchEvent::DOWN;
             touchEvent.rawPos = {touch.px, touch.py};
             touchEvent.viewPos = touchEvent.rawPos;
@@ -61,9 +60,9 @@ namespace luib{
         }
         else if (kHeld & KEY_TOUCH)
         {
-            heldDuration++;
+            touchEvent.heldDuration++;
             touchEvent.type = TouchEvent::HELD;
-            if(heldDuration>0 && (oldPos.px != touch.px || oldPos.py != touch.py))
+            if(touchEvent.heldDuration>0 && (oldPos.px != touch.px || oldPos.py != touch.py))
             {
                 touchEvent.type = TouchEvent::MOTION;
                 touchEvent.deltaPos.x=touch.px - oldPos.px;
@@ -73,20 +72,24 @@ namespace luib{
         }
         if (kUp & KEY_TOUCH)
         {
-            heldDuration=0;
+            touchEvent.heldDuration=0;
             touchEvent.type = TouchEvent::UP;
         }
     }
+
+    static Rectangle topScreenFrame{0,0,400,240};
+    static Rectangle bottomScreenFrame{0,0,320,240};
 
     void Update()
     {
         UpdateInputs();
         if(bottomScreenLayout)
         {
+            bottomCanvas.setFrameAndOrigin(bottomScreenFrame);
             dispatchTouchEvent(touchEvent);
-            bottomScreenLayout->measure(sizeConstraint{320,sizeConstraint::EXACTLY},
-                                        sizeConstraint{240,sizeConstraint::EXACTLY});
-            bottomScreenLayout->layout(Rectangle{0,0,320,240});
+            bottomScreenLayout->measure(sizeConstraint{bottomScreenFrame.w,sizeConstraint::EXACTLY},
+                                        sizeConstraint{bottomScreenFrame.h,sizeConstraint::EXACTLY});
+            bottomScreenLayout->layout(bottomScreenFrame);
             bottomScreenLayout->draw(bottomCanvas);
         }
         if(topScreenLayout)
@@ -102,7 +105,6 @@ namespace luib{
     {
         if(elementWithFocus != nullptr)
         {
-            printf("elementWithFocus %p parent %p",elementWithFocus,elementWithFocus->_upper);
             elementWithFocus->_hasFocus = false;
             elementWithFocus->onFocusLoss();
         }
@@ -133,7 +135,6 @@ namespace luib{
             }
                 break;
             case TouchEvent::MOTION :
-                printf("MOTION %d %d\n",touchEvent.deltaPos.x,touchEvent.deltaPos.y);
             case TouchEvent::HELD :
             case TouchEvent::UP :
                 elementWithFocus->onTouchEvent(touchEvent);

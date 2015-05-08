@@ -20,7 +20,12 @@ namespace luib {
     }
 
 
-    Point Canvas::getOrigin() const
+    Point &Canvas::getOrigin()
+    {
+        return _origin;
+    }
+
+    const Point &Canvas::getOrigin() const
     {
         return _origin;
     }
@@ -71,10 +76,43 @@ namespace luib {
         return _frame;
     }
 
+
+    void Canvas::setFrame(const Rectangle &frame)
+    {
+        _frame=frame;
+    }
+
     void Canvas::setFrameAndOrigin(const Rectangle &frame)
     {
         _origin.x=frame.x;
         _origin.y=frame.y;
         _frame = frame;
+    }
+
+
+    void Canvas::moveOrigin(const Point &delta)
+    {
+        _origin+=delta;
+    }
+
+    void Canvas::moveOrigin(int dx, int dy)
+    {
+        _origin+={dx,dy};
+    }
+
+
+    void Canvas::moveFrame(const Point &delta)
+    {
+        _frame+=delta;
+    }
+
+    void Canvas::moveFrame(int dx, int dy)
+    {
+        _frame+={dx,dy};
+    }
+
+    void Canvas::clipFrame(const Rectangle &clipArea)
+    {
+        _frame.clip(clipArea);
     }
 }

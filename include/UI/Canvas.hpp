@@ -57,11 +57,18 @@ namespace luib {
 
         void setOrigin(Point const &origin);
         void setOrigin(int const x, int const y);
-        Point getOrigin() const;
+        Point &getOrigin();
+        const Point &getOrigin() const;
 
         Rectangle getFrame() const;
         void setFrame(const Rectangle &frame);
         void setFrameAndOrigin(const Rectangle &frame);
+
+        void moveOrigin(const Point & delta);
+        void moveOrigin(int dx,int dy);
+        void moveFrame(const Point & delta);
+        void moveFrame(int dx,int dy);
+        void clipFrame(const Rectangle&clipArea);
 
     private:
         Point _origin;
