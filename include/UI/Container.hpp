@@ -20,6 +20,7 @@ namespace luib {
         friend void dispatchTouchEvent(TouchEvent touchEvent);
     public:
         Container(int x = 0, int y = 0, int w = 0, int h = 0,u32 bgColor = 0);
+        Container(LayoutParams layoutParams);
 
         ~Container();
 
@@ -121,6 +122,7 @@ namespace luib {
         sizeConstraint getChildSizeContraint(sizeConstraint constraint,int padding,int childParam);
 
 
+        virtual void onMeasure(sizeConstraint width, sizeConstraint height) override;
         virtual void onLayout(Rectangle const &coordinates) override;
         virtual void onDraw(Canvas &canvas) const override;
         virtual void onAttach(Element * element);

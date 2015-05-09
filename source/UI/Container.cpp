@@ -9,11 +9,12 @@
 
 namespace luib {
 
-    Container::Container(int x, int y, int w, int h,u32 bgColor) : Element(x, y, w, h,bgColor)
-    {
+    Container::Container(int x, int y, int w, int h,u32 bgColor) :
+            Element(x, y, w, h,bgColor) { }
 
-    }
 
+    Container::Container(LayoutParams layoutParams):
+            Element(layoutParams) { }
 
     Container::~Container()
     {
@@ -283,6 +284,7 @@ namespace luib {
                 }
                 break;
         }
+        //printf("getChildSizeContraint = %d %d \n",result.value,result.type);
         return result;
     }
 
@@ -300,5 +302,12 @@ namespace luib {
         width = getChildSizeContraint(width,_padding.left+_padding.right,childLayoutParams.width);
         height = getChildSizeContraint(height,_padding.top+_padding.bot,childLayoutParams.height);
         child->measure(width,height);
+    }
+
+    void Container::onMeasure(sizeConstraint width, sizeConstraint height)
+    {
+        //printf("Container::onMeasure\n");
+        measureChildren(width,height);
+        Element::onMeasure(width, height);
     }
 }

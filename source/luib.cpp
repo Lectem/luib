@@ -87,6 +87,7 @@ namespace luib{
         {
             bottomCanvas.setFrameAndOrigin(bottomScreenFrame);
             dispatchTouchEvent(touchEvent);
+            //printf("Measure bottom screen...\n");
             bottomScreenLayout->measure(sizeConstraint{bottomScreenFrame.w,sizeConstraint::EXACTLY},
                                         sizeConstraint{bottomScreenFrame.h,sizeConstraint::EXACTLY});
             bottomScreenLayout->layout(bottomScreenFrame);

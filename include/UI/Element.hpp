@@ -32,10 +32,11 @@ namespace luib {
         friend void ResetFocus();
         friend void dispatchTouchEvent(TouchEvent touchEvent);
     public:
-        Element(){}
+        Element(LayoutParams layoutParams){_layoutParams=layoutParams;}
         Element(int x =0,int y=0,int w = 1,int h = 1,u32 bgColor = 0):
                 bgColor(bgColor),
-                _aabb{x,y,w,h}
+                _aabb{x,y,w,h},
+                _layoutParams{w,h}
         {
             _screen =GFX_BOTTOM;
         }
@@ -85,7 +86,7 @@ namespace luib {
         virtual void onFocusLoss(){}
 
         const LayoutParams getLayoutParams() const { return _layoutParams; }
-        int defaultSize(int size,sizeConstraint constraint);
+        int defaultSize(int minSize,int layoutsize, sizeConstraint constraint);
 
         void bringToFront();
 

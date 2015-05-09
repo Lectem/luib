@@ -108,7 +108,8 @@ namespace luib {
 
     void Element::onMeasure(sizeConstraint width, sizeConstraint height)
     {
-        setMeasuredSize(defaultSize(minSize,width),defaultSize(minSize,height));
+        //printf("Element::onMeasure(%d,%d)\n",width.value,height.value);
+        setMeasuredSize(defaultSize(minSize,_layoutParams.width,width),defaultSize(minSize,_layoutParams.height,height));
     }
 
 
@@ -129,6 +130,7 @@ namespace luib {
 
     void Element::setMeasuredSize(const int width, const int height)
     {
+        //printf("Element::setMeasuredSize(%d,%d)\n",width,height);
         _measuredSize.x = width;
         _measuredSize.y = height;
     }
@@ -148,17 +150,19 @@ namespace luib {
         Element::bgColor = bgColor;
     }
 
-    int Element::defaultSize(int size, sizeConstraint constraint)
+    int Element::defaultSize(int minSize,int layoutsize, sizeConstraint constraint)
     {
         switch (constraint.type)
         {
             case sizeConstraint::AT_MOST:
+                if(layoutsize>0)return std::min(layoutsize,constraint.value);
             case sizeConstraint::EXACTLY:
-                return size;
-            case sizeConstraint::NOT_SPECIFIED:
                 return constraint.value;
+            case sizeConstraint::NOT_SPECIFIED:
+                if(layoutsize>0)return layoutsize;
+                return minSize;
         }
-        return size;
+        return minSize;
     }
 
 }
