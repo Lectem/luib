@@ -70,8 +70,6 @@ namespace luib {
 
         void setBgColor(u32 bgColor);
 
-        u32 bgColor;
-
 
     protected:
         void drawBG(Canvas &canvas) const;
@@ -90,6 +88,7 @@ namespace luib {
 
         void bringToFront();
 
+        u32 bgColor;
         Margin _margin;
         bool _bringToFrontOnFocus = false;
 

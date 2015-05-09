@@ -23,4 +23,9 @@ namespace luib {
         canvas.moveOrigin(scrollPos);
     }
 
+    bool ScrollLayout::findFocusedElement(Element *&currentFocus, TouchEvent &touchEvent)
+    {
+        //TODO
+        return Container::findFocusedElement(currentFocus, touchEvent);
+    }
 }

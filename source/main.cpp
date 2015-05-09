@@ -27,12 +27,12 @@ int main(int argc, char **argv)
     ScrollLayout_shared_ptr scrollLayout;
     if (luib::bottomScreenLayout)
     {
-        luib::bottomScreenLayout->bgColor = RGBA8(0x55,0x55,0x55,0xFFF);
+        luib::bottomScreenLayout->setBgColor(RGBA8(0x55,0x55,0x55,0xFFF));
 
         //We use layout parameters.
         //Ask for a width of 80 and to match the parent's height
         Container_shared_ptr container = luib::bottomScreenLayout->add<Container>(LayoutParams(80,LayoutParams::MATCH_PARENT));
-        container->bgColor = RGBA8(0,0x5F,0x44,0xFF);
+        container->setBgColor(RGBA8(0,0x5F,0x44,0xFF));
 
         //Since the bottomScreenLayout is a RelativeLayout, we can ask for precise coordinates
         scrollLayout= luib::bottomScreenLayout->add<ScrollLayout>(100,20,150,150,RGBA8(0xD5,0x5D,0x42,0xff));
@@ -42,13 +42,13 @@ int main(int argc, char **argv)
                                 "This text is scrolling!\n\n"
                                 "Click the yellow button to create a window.\n\n"
                                 "Click the red button to clear the console.");
-        someText->bgColor = 0xAA0000FF;
+        someText->setBgColor(0xAA0000FF);
 
         Button_shared_ptr clearButton = luib::bottomScreenLayout->add<Button>(0,0,10,10);
 
         //Use lambda for events !
         clearButton->setOnClickListener([](Element&){consoleClear();});
-        clearButton->bgColor = 0xFF0000FF;
+        clearButton->setBgColor(0xFF0000FF);
 
         auto button = make_elem<Button>(0, 230, 10, 10);
         button->setOnClickListener(
@@ -60,7 +60,7 @@ int main(int argc, char **argv)
 
                      newWindow->add<TextArea>(2, 2, 250, 250,"This window was created using the button.");
                 });
-        button->bgColor = 0xFFFF00FF;
+        button->setBgColor(0xFFFF00FF);
         luib::bottomScreenLayout->attach(button);
 
         printf("Detaching button...\n");
