@@ -1,12 +1,12 @@
 #LUIB - Lectem's User Interface Bullshit
 
-A small C++ UI library based (for now) on sf2dlib.
+A small C++ UI library based (for now) on sf2dlib. Still a WIP !
 
 
 #Requirements
 * [DevkitPro](devkitpro.org) with DevkitARM release 44+
-* [ctrulib](https://github.com/smealum/ctrulib/) (latest working commit confirmed to work : [5a28a7](https://github.com/smealum/ctrulib/tree/5a28a7398a5777438a9c03bf97a492c6a7224306))
-* [libsf2d](https://github.com/xerpi/sf2dlib/) (latest working commit confirmed to work : [bd014d](https://github.com/xerpi/sf2dlib/tree/bd014db1451291554e5d124d8bcdb21e9d220542)))
+* [ctrulib](https://github.com/smealum/ctrulib/) (latest commit confirmed to work : [5a28a7](https://github.com/smealum/ctrulib/tree/5a28a7398a5777438a9c03bf97a492c6a7224306))
+* [libsf2d](https://github.com/xerpi/sf2dlib/) (latest commit confirmed to work : [bd014d](https://github.com/xerpi/sf2dlib/tree/bd014db1451291554e5d124d8bcdb21e9d220542)))
 
 #Documentation
 
