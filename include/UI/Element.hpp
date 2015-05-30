@@ -28,14 +28,16 @@ namespace luib {
         };
 
         friend class Container;
+        friend class ScrollLayout;
         friend void Update();
         friend void ResetFocus();
         friend void dispatchTouchEvent(TouchEvent touchEvent);
     public:
-        Element(){}
+        Element(LayoutParams layoutParams){_layoutParams=layoutParams;}
         Element(int x =0,int y=0,int w = 1,int h = 1,u32 bgColor = 0):
                 bgColor(bgColor),
-                _aabb{x,y,w,h}
+                _aabb{x,y,w,h},
+                _layoutParams{w,h}
         {
             _screen =GFX_BOTTOM;
         }
@@ -69,8 +71,6 @@ namespace luib {
 
         void setBgColor(u32 bgColor);
 
-        u32 bgColor;
-
 
     protected:
         void drawBG(Canvas &canvas) const;
@@ -85,15 +85,14 @@ namespace luib {
         virtual void onFocusLoss(){}
 
         const LayoutParams getLayoutParams() const { return _layoutParams; }
-        int defaultSize(int size,sizeConstraint constraint);
+        int defaultSize(int minSize,int layoutsize, sizeConstraint constraint);
 
         void bringToFront();
 
+        u32 bgColor;
         Margin _margin;
         bool _bringToFrontOnFocus = false;
 
-
-    private:
 
 
         /**
@@ -101,6 +100,8 @@ namespace luib {
          * Internal usage only.
          */
         virtual bool findFocusedElement(Element *&currentFocus, TouchEvent &touchEvent);
+    private:
+
 
         Container *_upper = nullptr;
         Container *_root = nullptr;

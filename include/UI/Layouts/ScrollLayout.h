@@ -27,6 +27,8 @@ namespace luib {
     protected:
         void onDraw(Canvas &canvas) const override;
         Point scrollPos;
+    private:
+        virtual bool findFocusedElement(Element *&currentFocus, TouchEvent &touchEvent) override;
     };
 
     using ScrollLayout_shared_ptr = std::shared_ptr<ScrollLayout>;

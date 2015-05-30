@@ -4,7 +4,6 @@
  *@date 07/05/2015
  */
 #include "Structures.hpp"
-#include "UI/Element.hpp"
 #include "UI/Layouts/ScrollLayout.h"
 
 
@@ -23,4 +22,25 @@ namespace luib {
         canvas.moveOrigin(scrollPos);
     }
 
+    bool ScrollLayout::findFocusedElement(Element *&currentFocus, TouchEvent &touchEvent)
+    {
+        //TODO:finish?
+        for(int child = _children.size()-1;child>=0;--child)
+        {
+            Point relativeSytlusPos = touchEvent.viewPos;
+            Rectangle& childAABB = getChildAABB(_children[child].get());
+            relativeSytlusPos.x -= childAABB.x;
+            relativeSytlusPos.y -= childAABB.y;
+            relativeSytlusPos-= scrollPos;
+            TouchEvent dispatchedTouchEvent = touchEvent;
+            dispatchedTouchEvent.viewPos = relativeSytlusPos;
+            if (childAABB.contains(touchEvent.viewPos+scrollPos) &&
+                _children[child]->findFocusedElement(currentFocus, dispatchedTouchEvent))
+            {
+                touchEvent = dispatchedTouchEvent;
+                return true;
+            }
+        }
+        return Element::findFocusedElement(currentFocus, touchEvent);
+    }
 }

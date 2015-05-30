@@ -29,7 +29,7 @@ namespace luib{
         topScreenLayout= make_elem<RelativeLayout>(0,0,400,240);
         bottomScreenLayout= make_elem<RelativeLayout>(0,0,150,240);
         elementWithFocus = bottomScreenLayout.get();
-        font = sf2d_create_texture(8,1024,GPU_RGBA8,SF2D_PLACE_RAM);
+        font = sf2d_create_texture(8,1024,TEXFMT_RGBA8,SF2D_PLACE_RAM);
         sf2d_fill_texture_from_RGBA8(font, fontData.pixel_data, fontData.width, fontData.height);
         sf2d_texture_tile32(font);
     }
@@ -87,6 +87,7 @@ namespace luib{
         {
             bottomCanvas.setFrameAndOrigin(bottomScreenFrame);
             dispatchTouchEvent(touchEvent);
+            //printf("Measure bottom screen...\n");
             bottomScreenLayout->measure(sizeConstraint{bottomScreenFrame.w,sizeConstraint::EXACTLY},
                                         sizeConstraint{bottomScreenFrame.h,sizeConstraint::EXACTLY});
             bottomScreenLayout->layout(bottomScreenFrame);

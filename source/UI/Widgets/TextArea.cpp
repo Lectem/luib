@@ -3,11 +3,11 @@
 //
 
 #include <luib.hpp>
-#include "UI/Widgets/Text.hpp"
+#include "UI/Widgets/TextArea.hpp"
 #include "UI/Canvas.hpp"
 namespace luib{
 
-    void Text::onDraw(Canvas &canvas) const
+    void TextArea::onDraw(Canvas &canvas) const
     {
 
         int left = _margin.left;
@@ -75,25 +75,25 @@ namespace luib{
         }
     }
 
-    Text::Text(int x, int y, int w, int h,std::string text) :
+    TextArea::TextArea(int x, int y, int w, int h,std::string text) :
             Element(x, y, w, h),
             text(text)
     {
     }
 
-    void Text::onTouchEvent(const TouchEvent &touchEvent)
+    void TextArea::onTouchEvent(const TouchEvent &touchEvent)
     {
         Element::onTouchEvent(touchEvent);
-        printf("Text clicked\n");
+        printf("TextArea clicked\n");
     }
 
 
-    int Text::getCharWidth(char c)
+    int TextArea::getCharWidth(char c)
     {
         return 8;
     }
 
-    int Text::getWordWidth(const char * str,int &nbCharacters)
+    int TextArea::getWordWidth(const char * str,int &nbCharacters)
     {
         int width =0;
         nbCharacters=0;

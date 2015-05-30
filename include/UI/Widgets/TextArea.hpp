@@ -6,11 +6,11 @@
 #include "UI/Element.hpp"
 #include <string>
 namespace luib {
-    class Text : public Element
+    class TextArea : public Element
     {
 
     public:
-        Text(int x, int y, int w, int h,std::string text);
+        TextArea(int x, int y, int w, int h,std::string text);
 
         void onDraw(Canvas &canvas) const override;
 
@@ -35,7 +35,7 @@ namespace luib {
         std::string text;
     };
 
-    using Text_shared_ptr = std::shared_ptr<Text>;
+    using Text_shared_ptr = std::shared_ptr<TextArea>;
 
 }
 
