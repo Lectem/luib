@@ -28,6 +28,7 @@ namespace luib {
         };
 
         friend class Container;
+        friend class ScrollLayout;
         friend void Update();
         friend void ResetFocus();
         friend void dispatchTouchEvent(TouchEvent touchEvent);
@@ -93,14 +94,14 @@ namespace luib {
         bool _bringToFrontOnFocus = false;
 
 
-    private:
-
 
         /**
          * This method has to change currentFocus and touchEvent according to the focused element
          * Internal usage only.
          */
         virtual bool findFocusedElement(Element *&currentFocus, TouchEvent &touchEvent);
+    private:
+
 
         Container *_upper = nullptr;
         Container *_root = nullptr;
